@@ -5,6 +5,7 @@ import configureStore from './store/configureStore';
 
 const store = configureStore();
 window.App = store;
+window.App.serverPath = 'http://localhost:4000/';
 
 class App extends Component {
     render() {
