@@ -1,12 +1,14 @@
-import { createStore, combineReducers } from 'redux';
-import fairyTalesReducer from '../components/fairyTales/fairyTalesReducer';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk'
+import fairyTalesReducer from '../components/fairyTales/fairyTalesListReducer';
+import errorModalReducer from '../components/abstr/errorModal/errorModalReducer';
 
-export default () => {
-  const store = createStore(
-    combineReducers({
-      fairyTales: fairyTalesReducer,
-    })
-  );
+const root = combineReducers({
+    fairyTales: fairyTalesReducer,
+    errorModal: errorModalReducer,
+});
 
-  return store;
-}
+export const store = createStore(
+    root, 
+    applyMiddleware(thunk)
+);
