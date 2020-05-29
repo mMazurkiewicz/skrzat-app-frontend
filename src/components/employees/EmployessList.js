@@ -113,7 +113,7 @@ const mapStateToProps = (state) => ({
   items: state.employees.list.items,
 });
 
-export const prefix = 'EMPLOYEES';
+export const prefix = 'EMPLOYEES_LIST';
 
 const wrappedList = HOCList(EmployeesList, {
   prefix,
