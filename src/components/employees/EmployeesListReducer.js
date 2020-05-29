@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { prefix } from './EmployeesListActions';
+import EmployeesFormReducer from './edit/employeesFormReducer';
 
 const employeesDefaultState = {
   loading: false,
@@ -25,4 +26,5 @@ export const listReducer = (state = employeesDefaultState, action) => {
 
 export default combineReducers({
   list: listReducer,
+  form: EmployeesFormReducer,
 });
