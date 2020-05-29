@@ -138,6 +138,8 @@ function Header(props) {
   );
 }
 
-Header.propTypes = {};
+Header.propTypes = {
+  window: PropTypes.object,
+};
 
 export default Header;
