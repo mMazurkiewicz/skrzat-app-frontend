@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux';
-import fairyTalesFormReducer from './edit/fairyTalesFormReducer';
-import { prefix } from './FairyTalesList';
+import { prefix } from './EmployessList';
+import EmployeesFormReducer from './edit/employeesFormReducer';
 
-const fairyTalesDefaultState = {
+const employeesDefaultState = {
   loading: false,
   items: [],
 };
 
-export const listReducer = (state = fairyTalesDefaultState, action) => {
+export const listReducer = (state = employeesDefaultState, action) => {
   switch (action.type) {
     case `${prefix}SAVE_ITEMS_FROM_SERVER`:
       return {
@@ -26,5 +26,5 @@ export const listReducer = (state = fairyTalesDefaultState, action) => {
 
 export default combineReducers({
   list: listReducer,
-  form: fairyTalesFormReducer,
+  form: EmployeesFormReducer,
 });

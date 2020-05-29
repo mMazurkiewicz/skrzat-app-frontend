@@ -14,10 +14,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
-
 import HOCList from '../abstr/HOCList/HOCList';
 
-export class FairyTalesList extends Component {
+export class EmployeesList extends Component {
   render() {
     const { classes, items } = this.props;
     return (
@@ -27,15 +26,16 @@ export class FairyTalesList extends Component {
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Nazwa</TableCell>
-                <TableCell>Opis</TableCell>
+                <TableCell>Imię i nazwisko</TableCell>
+                <TableCell>E-mail</TableCell>
+                <TableCell>Telefon</TableCell>
                 <TableCell align="right">
-                  <Tooltip title="Dodaj nową bajkę">
+                  <Tooltip title="Dodaj nowego pracownika">
                     <IconButton
                       edge="end"
                       aria-label="add"
                       component={Link}
-                      to="/fairyTales/0"
+                      to="/employees/0"
                     >
                       <AddIcon />
                     </IconButton>
@@ -46,8 +46,8 @@ export class FairyTalesList extends Component {
             <TableBody>
               {items.length === 0 && (
                 <TableRow>
-                  <TableCell component="th" colSpan={3} align="center">
-                    Lista pusta! Dodaj nową bajkę!
+                  <TableCell component="th" colSpan={4} align="center">
+                    Lista pusta! Dodaj nowego pracownika!
                   </TableCell>
                 </TableRow>
               )}
@@ -57,20 +57,23 @@ export class FairyTalesList extends Component {
                     {item.name}
                   </TableCell>
                   <TableCell className={classes.td}>
-                    {item.description ? item.description : 'Brak opisu :-('}
+                    {item.mail ? item.mail : 'Brak maila :-('}
+                  </TableCell>
+                  <TableCell className={classes.td}>
+                    {item.phoneNumber}
                   </TableCell>
                   <TableCell align="right">
-                    <Tooltip title="Edytuj bajkę">
+                    <Tooltip title="Edytuj dane pracownika">
                       <IconButton
                         edge="end"
                         aria-label="edit"
                         component={Link}
-                        to={`/fairyTales/${item._id}`}
+                        to={`/employees/${item._id}`}
                       >
                         <DetailsIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Usuń bajkę">
+                    <Tooltip title="Usuń pracownika">
                       <IconButton
                         edge="end"
                         aria-label="delete"
@@ -90,7 +93,7 @@ export class FairyTalesList extends Component {
   }
 }
 
-FairyTalesList.propTypes = {
+EmployeesList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object),
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -106,15 +109,15 @@ FairyTalesList.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  loading: state.fairyTales.list.loading,
-  items: state.fairyTales.list.items,
+  loading: state.employees.list.loading,
+  items: state.employees.list.items,
 });
 
-export const prefix = 'FAIRYTALES_LIST_';
+export const prefix = 'EMPLOYEES_LIST';
 
-const wrappedList = HOCList(FairyTalesList, {
+const wrappedList = HOCList(EmployeesList, {
   prefix,
-  serverRoute: 'fairyTales',
+  serverRoute: 'employees',
 });
 
 export default connect(mapStateToProps, null)(wrappedList);
