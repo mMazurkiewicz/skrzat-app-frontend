@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { prefix } from './EmployeesListActions';
+import { prefix } from './EmployessList';
 import EmployeesFormReducer from './edit/employeesFormReducer';
 
 const employeesDefaultState = {
