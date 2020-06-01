@@ -19,7 +19,7 @@ import HOCList from '../abstr/HOCList/HOCList';
 
 export class FairyTalesList extends Component {
   render() {
-    const { classes, items } = this.props;
+    const { classes, items, deleteItemOnServer } = this.props;
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
@@ -74,7 +74,7 @@ export class FairyTalesList extends Component {
                       <IconButton
                         edge="end"
                         aria-label="delete"
-                        onClick={() => this.deleteItemOnServer(item._id)}
+                        onClick={() => deleteItemOnServer(item._id)}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -103,6 +103,7 @@ FairyTalesList.propTypes = {
     toolbar: PropTypes.string,
     td: PropTypes.string,
   }),
+  deleteItemOnServer: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

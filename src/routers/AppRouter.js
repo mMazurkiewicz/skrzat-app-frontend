@@ -7,6 +7,7 @@ import FairyTalesFormComponent from '../components/fairyTales/edit/FairyTalesFor
 import ErrorModalComponent from '../components/abstr/errorModal/ErrorModal';
 import EmployeesListComponent from '../components/employees/EmployessList';
 import EmployeesFormComponent from '../components/employees/edit/EmployeesForm';
+import TeamsListComponent from '../components/teams/TeamsList';
 
 const AppRouter = () => (
   <Router history={history}>
@@ -22,6 +23,8 @@ const AppRouter = () => (
 
         <Route path="/employees" exact component={EmployeesListComponent} />
         <Route path="/employees/:id" exact component={EmployeesFormComponent} />
+
+        <Route path="/teams" exact component={TeamsListComponent} />
       </Switch>
       <ErrorModalComponent />
     </div>
