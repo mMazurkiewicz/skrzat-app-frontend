@@ -1,4 +1,4 @@
-import { prefix } from './EmployeesFormActions';
+import { prefix } from './EmployeesForm';
 
 const employeesDefaultState = {
   loading: false,
