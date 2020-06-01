@@ -69,7 +69,7 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
 
     handleChange(field, e) {
       const { handleChangeInput } = this.props;
-
+      console.log(field, e.target.value);
       handleChangeInput(field, e.target.value);
     }
 
@@ -78,9 +78,9 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
       toggleEdit(!editMode);
     }
 
-    sendDataToServer() {
+    sendDataToServer(item) {
       const {
-        item,
+        // item,
         toggleLoading,
         toggleEdit,
         showErrorModal,
@@ -89,7 +89,6 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
       } = this.props;
 
       toggleLoading(true);
-
       axios
         .post(this.serverRoute, item)
         .then((res) => {
@@ -118,12 +117,12 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
   }
 
   HOC.propTypes = {
-    item: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      phoneNumber: PropTypes.string.isRequired,
-      mail: PropTypes.string.isRequired,
-      _id: PropTypes.string,
-    }),
+    // item: PropTypes.shape({
+    //   name: PropTypes.string.isRequired,
+    //   phoneNumber: PropTypes.string.isRequired,
+    //   mail: PropTypes.string.isRequired,
+    //   _id: PropTypes.string,
+    // }),
     match: PropTypes.shape({
       params: PropTypes.shape({
         id: PropTypes.string,

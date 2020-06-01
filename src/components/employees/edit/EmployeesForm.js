@@ -142,7 +142,7 @@ EmployeesForm.propTypes = {
   handleChange: PropTypes.func,
 };
 
-export const prefix = 'EMPLOYEES_FORM';
+export const prefix = 'EMPLOYEES_FORM_';
 
 const mapStateToProps = (state) => ({
   loading: state.employees.form.loading,

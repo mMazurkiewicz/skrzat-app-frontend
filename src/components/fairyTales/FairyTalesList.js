@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import axios from 'axios';
-import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
@@ -16,63 +14,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
-import {
-  saveItemsFromServerAction,
-  toggleLoadingAction,
-} from './FairyTalesListActions';
 
-const drawerWidth = 240;
-
-const styles = (theme) => ({
-  toolbar: theme.mixins.toolbar,
-
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-    },
-  },
-  td: {
-    maxWidth: '300px',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  fab: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
-  },
-});
+import HOCList from '../abstr/HOCList/HOCList';
 
 export class FairyTalesList extends Component {
-  constructor(props) {
-    super(props);
-    this.route = `${window.App.serverPath}fairyTales`;
-    this.loadData = this.loadData.bind(this);
-    this.deleteItemOnServer = this.deleteItemOnServer.bind(this);
-  }
-
-  componentDidMount() {
-    this.loadData();
-  }
-
-  loadData() {
-    const { toggleLoading, saveItemsFromServer } = this.props;
-
-    toggleLoading(true);
-    axios.get(this.route).then((res) => {
-      saveItemsFromServer(res.data);
-      toggleLoading(false);
-    });
-  }
-
-  deleteItemOnServer(itemId) {
-    axios.delete(`${this.route}/${itemId}`).then(() => this.loadData());
-  }
-
   render() {
     const { classes, items } = this.props;
     return (
@@ -158,8 +103,6 @@ FairyTalesList.propTypes = {
     toolbar: PropTypes.string,
     td: PropTypes.string,
   }),
-  toggleLoading: PropTypes.func,
-  saveItemsFromServer: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -167,11 +110,11 @@ const mapStateToProps = (state) => ({
   items: state.fairyTales.list.items,
 });
 
-const mapActionsToProps = {
-  saveItemsFromServer: saveItemsFromServerAction,
-  toggleLoading: toggleLoadingAction,
-};
+export const prefix = 'FAIRYTALES_LIST_';
 
-const styledComponent = withStyles(styles)(FairyTalesList);
+const wrappedList = HOCList(FairyTalesList, {
+  prefix,
+  serverRoute: 'fairyTales',
+});
 
-export default connect(mapStateToProps, mapActionsToProps)(styledComponent);
+export default connect(mapStateToProps, null)(wrappedList);

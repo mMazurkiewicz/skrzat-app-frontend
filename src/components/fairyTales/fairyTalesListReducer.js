@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import fairyTalesFormReducer from './edit/fairyTalesFormReducer';
-import { prefix } from './FairyTalesListActions';
+import { prefix } from './FairyTalesList';
 
 const fairyTalesDefaultState = {
   loading: false,
