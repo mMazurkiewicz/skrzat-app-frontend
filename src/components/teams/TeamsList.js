@@ -14,9 +14,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
+
 import HOCList from '../abstr/HOCList/HOCList';
 
-export class EmployeesList extends Component {
+export class TeamsList extends Component {
   render() {
     const { classes, items, deleteItemOnServer } = this.props;
     return (
@@ -26,16 +27,15 @@ export class EmployeesList extends Component {
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Imię i nazwisko</TableCell>
-                <TableCell>E-mail</TableCell>
-                <TableCell>Telefon</TableCell>
+                <TableCell>Nazwa</TableCell>
+                <TableCell>Członkowie</TableCell>
                 <TableCell align="right">
-                  <Tooltip title="Dodaj nowego pracownika">
+                  <Tooltip title="Dodaj nową ekipę">
                     <IconButton
                       edge="end"
                       aria-label="add"
                       component={Link}
-                      to="/employees/0"
+                      to="/teams/0"
                     >
                       <AddIcon />
                     </IconButton>
@@ -46,8 +46,8 @@ export class EmployeesList extends Component {
             <TableBody>
               {items.length === 0 && (
                 <TableRow>
-                  <TableCell component="th" colSpan={4} align="center">
-                    Lista pusta! Dodaj nowego pracownika!
+                  <TableCell component="th" colSpan={3} align="center">
+                    Lista pusta! Dodaj nową ekipę!
                   </TableCell>
                 </TableRow>
               )}
@@ -57,23 +57,20 @@ export class EmployeesList extends Component {
                     {item.name}
                   </TableCell>
                   <TableCell className={classes.td}>
-                    {item.mail ? item.mail : 'Brak maila :-('}
-                  </TableCell>
-                  <TableCell className={classes.td}>
-                    {item.phoneNumber}
+                    {item.members.map((member) => member.name).join(', ')}
                   </TableCell>
                   <TableCell align="right">
-                    <Tooltip title="Edytuj dane pracownika">
+                    <Tooltip title="Edytuj ekipę">
                       <IconButton
                         edge="end"
                         aria-label="edit"
                         component={Link}
-                        to={`/employees/${item._id}`}
+                        to={`/teams/${item._id}`}
                       >
                         <DetailsIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Usuń pracownika">
+                    <Tooltip title="Usuń ekipę">
                       <IconButton
                         edge="end"
                         aria-label="delete"
@@ -93,7 +90,7 @@ export class EmployeesList extends Component {
   }
 }
 
-EmployeesList.propTypes = {
+TeamsList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object),
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -110,15 +107,15 @@ EmployeesList.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  loading: state.employees.list.loading,
-  items: state.employees.list.items,
+  loading: state.teams.list.loading,
+  items: state.teams.list.items,
 });
 
-export const prefix = 'EMPLOYEES_LIST';
+export const prefix = 'TEAMS_LIST_';
 
-const wrappedList = HOCList(EmployeesList, {
+const wrappedList = HOCList(TeamsList, {
   prefix,
-  serverRoute: 'employees',
+  serverRoute: 'teams',
 });
 
 export default connect(mapStateToProps, null)(wrappedList);
