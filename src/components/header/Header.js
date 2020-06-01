@@ -70,12 +70,21 @@ function Header(props) {
         >
           Bajki
         </MenuItem>
+
         <MenuItem
           component={NavLink}
           activeClassName="Mui-selected"
           to="/employees"
         >
           Pracownicy
+        </MenuItem>
+
+        <MenuItem
+          component={NavLink}
+          activeClassName="Mui-selected"
+          to="/teams"
+        >
+          Ekipy
         </MenuItem>
       </MenuList>
     </div>

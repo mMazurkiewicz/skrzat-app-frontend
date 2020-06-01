@@ -58,7 +58,12 @@ const HOCList = (WrappedComponent, { prefix, serverRoute }) => {
     }
 
     render() {
-      return <WrappedComponent {...this.props} />;
+      return (
+        <WrappedComponent
+          {...this.props}
+          deleteItemOnServer={this.deleteItemOnServer}
+        />
+      );
     }
   }
 
