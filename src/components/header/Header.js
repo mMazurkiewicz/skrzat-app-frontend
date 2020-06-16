@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  ulItem: {
+    transition: '0.2s',
+  }
 }));
 
 function Header(props) {
@@ -64,6 +67,7 @@ function Header(props) {
       <Divider />
       <MenuList>
         <MenuItem
+          className={classes.ulItem}
           component={NavLink}
           activeClassName="Mui-selected"
           to="/fairyTales"
@@ -72,6 +76,7 @@ function Header(props) {
         </MenuItem>
 
         <MenuItem
+          className={classes.ulItem}
           component={NavLink}
           activeClassName="Mui-selected"
           to="/employees"
@@ -80,6 +85,7 @@ function Header(props) {
         </MenuItem>
 
         <MenuItem
+          className={classes.ulItem}
           component={NavLink}
           activeClassName="Mui-selected"
           to="/teams"

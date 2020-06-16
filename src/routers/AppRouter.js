@@ -8,6 +8,7 @@ import ErrorModalComponent from '../components/abstr/errorModal/ErrorModal';
 import EmployeesListComponent from '../components/employees/EmployessList';
 import EmployeesFormComponent from '../components/employees/edit/EmployeesForm';
 import TeamsListComponent from '../components/teams/TeamsList';
+import TeamsFormComponent from '../components/teams/edit/TeamsForm';
 
 const AppRouter = () => (
   <Router history={history}>
@@ -25,6 +26,7 @@ const AppRouter = () => (
         <Route path="/employees/:id" exact component={EmployeesFormComponent} />
 
         <Route path="/teams" exact component={TeamsListComponent} />
+        <Route path="/teams/:id" exact component={TeamsFormComponent} />
       </Switch>
       <ErrorModalComponent />
     </div>

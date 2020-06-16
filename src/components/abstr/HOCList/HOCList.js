@@ -9,7 +9,6 @@ const drawerWidth = 240;
 
 const styles = (theme) => ({
   toolbar: theme.mixins.toolbar,
-
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -24,11 +23,17 @@ const styles = (theme) => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
+  tr: {
+    transition: '0.2s'
+  },
   fab: {
     position: 'absolute',
     bottom: theme.spacing(2),
     right: theme.spacing(2),
   },
+  chips: {
+    margin: '0 3px 0 0',
+  }
 });
 
 const HOCList = (WrappedComponent, { prefix, serverRoute }) => {
@@ -75,7 +80,6 @@ const HOCList = (WrappedComponent, { prefix, serverRoute }) => {
       }),
     }),
     classes: PropTypes.shape({
-      table: PropTypes.string,
       content: PropTypes.string,
       toolbar: PropTypes.string,
       td: PropTypes.string,

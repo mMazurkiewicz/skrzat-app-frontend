@@ -32,6 +32,13 @@ const styles = (theme) => ({
       marginLeft: drawerWidth,
     },
   },
+  chip: {
+    alignSelf: 'center',
+    marginLeft: '5px',
+  },
+  gridWithChips: {
+    display: 'flex',
+  }
 });
 
 const HOCForm = (WrappedComponent, { prefix, route }) => {
@@ -69,7 +76,6 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
 
     handleChange(field, e) {
       const { handleChangeInput } = this.props;
-      console.log(field, e.target.value);
       handleChangeInput(field, e.target.value);
     }
 
@@ -80,7 +86,6 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
 
     sendDataToServer(item) {
       const {
-        // item,
         toggleLoading,
         toggleEdit,
         showErrorModal,
@@ -94,7 +99,6 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
         .then((res) => {
           toggleLoading(false);
           toggleEdit(false);
-          saveItemFromServer(res.data);
           history.push(`/${this.route}/${res.data._id}`);
         })
         .catch((err) => {
@@ -117,12 +121,6 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
   }
 
   HOC.propTypes = {
-    // item: PropTypes.shape({
-    //   name: PropTypes.string.isRequired,
-    //   phoneNumber: PropTypes.string.isRequired,
-    //   mail: PropTypes.string.isRequired,
-    //   _id: PropTypes.string,
-    // }),
     match: PropTypes.shape({
       params: PropTypes.shape({
         id: PropTypes.string,

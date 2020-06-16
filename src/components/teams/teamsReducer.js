@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { prefix } from './TeamsList';
+import teamsFormReducer from './edit/teamsFormReducer';
 
 const teamsDefaultState = {
   loading: false,
@@ -25,4 +26,5 @@ export const listReducer = (state = teamsDefaultState, action) => {
 
 export default combineReducers({
   list: listReducer,
+  form: teamsFormReducer,
 });
