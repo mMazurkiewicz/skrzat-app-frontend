@@ -27,6 +27,11 @@ class HOCFormActions {
   resetState = () => ({
     type: `${this.prefix}RESET_STATE`,
   });
+
+  saveEmployeesOptions = (options) => ({
+    type: `${this.prefix}SAVE_EMPLOYESS_OPTIONS`,
+    options,
+  });
 }
 
 export default HOCFormActions;

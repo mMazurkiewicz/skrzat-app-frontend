@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -10,7 +11,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
 import UndoIcon from '@material-ui/icons/Undo';
 import TextField from '@material-ui/core/TextField';
-import PropTypes from 'prop-types';
+import Chip from '@material-ui/core/Chip';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
 
 export class EmployeesForm extends React.Component {
@@ -49,7 +50,25 @@ export class EmployeesForm extends React.Component {
                 />
               </FormControl>
             </Grid>
-            <Grid item xs={6} align="right">
+            <Grid item xs={5} className={classes.gridWithChips}>
+                {
+                  item.teams && item.teams.map(team => (
+                    <Tooltip key={team._id} title="Edytuj ekipę">
+                      <Chip 
+                        key={team._id}
+                        variant='outlined'
+                        className={classes.chip} 
+                        label={team.name} 
+                        component="a" 
+                        href={`teams/${team._id}`} 
+                        clickable 
+                        color="primary"
+                      />
+                    </Tooltip>
+                  ))
+                }
+            </Grid>
+            <Grid item xs={1} align="right">
               <Tooltip title="Edytuj">
                 <span>
                   <IconButton
@@ -103,7 +122,7 @@ export class EmployeesForm extends React.Component {
                 </Button>
 
                 <Button
-                  onClick={sendDataToServer}
+                  onClick={() => sendDataToServer(item)}
                   size="large"
                   disabled={!editMode}
                   variant="contained"

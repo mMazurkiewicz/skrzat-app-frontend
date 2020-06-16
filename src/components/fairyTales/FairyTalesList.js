@@ -14,6 +14,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 
 import HOCList from '../abstr/HOCList/HOCList';
 
@@ -23,6 +24,9 @@ export class FairyTalesList extends Component {
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
+        <Typography variant="h3" gutterBottom align="center">
+          Bajki
+        </Typography>
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
@@ -52,7 +56,7 @@ export class FairyTalesList extends Component {
                 </TableRow>
               )}
               {items.map((item) => (
-                <TableRow key={item._id} hover>
+                <TableRow key={item._id} hover className={classes.tr}>
                   <TableCell component="th" scope="row">
                     {item.name}
                   </TableCell>

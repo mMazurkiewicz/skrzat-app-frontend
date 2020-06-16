@@ -14,6 +14,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
+import Chip from '@material-ui/core/Chip';
+import Typography from '@material-ui/core/Typography';
 import HOCList from '../abstr/HOCList/HOCList';
 
 export class EmployeesList extends Component {
@@ -22,13 +24,17 @@ export class EmployeesList extends Component {
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
+        <Typography variant="h3" gutterBottom align="center">
+          Pracownicy
+        </Typography>
         <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
+          <Table aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>Imię i nazwisko</TableCell>
                 <TableCell>E-mail</TableCell>
                 <TableCell>Telefon</TableCell>
+                <TableCell>Ekipy</TableCell>
                 <TableCell align="right">
                   <Tooltip title="Dodaj nowego pracownika">
                     <IconButton
@@ -46,13 +52,13 @@ export class EmployeesList extends Component {
             <TableBody>
               {items.length === 0 && (
                 <TableRow>
-                  <TableCell component="th" colSpan={4} align="center">
+                  <TableCell component="th" colSpan={5} align="center">
                     Lista pusta! Dodaj nowego pracownika!
                   </TableCell>
                 </TableRow>
               )}
               {items.map((item) => (
-                <TableRow key={item._id} hover>
+                <TableRow key={item._id} hover className={classes.tr}>
                   <TableCell component="th" scope="row">
                     {item.name}
                   </TableCell>
@@ -61,6 +67,26 @@ export class EmployeesList extends Component {
                   </TableCell>
                   <TableCell className={classes.td}>
                     {item.phoneNumber}
+                  </TableCell>
+                  <TableCell className={classes.td}>
+                    {item.teams
+                      ? item.teams.map((team, i) => (
+                          <Tooltip key={team._id} title="Edytuj ekipę">
+                            <Chip 
+                              key={team._id}
+                              size="small" 
+                              className={classes.chips} 
+                              label={team.name} 
+                              component="a" 
+                              href={`teams/${team._id}`} 
+                              clickable 
+                              color="primary"
+                              variant='outlined'
+                            />
+                          </Tooltip>
+                        ))
+                      : '-'
+                    }
                   </TableCell>
                   <TableCell align="right">
                     <Tooltip title="Edytuj dane pracownika">
