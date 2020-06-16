@@ -60,7 +60,7 @@ export class EmployeesForm extends React.Component {
                         className={classes.chip} 
                         label={team.name} 
                         component="a" 
-                        href={`teams/${team._id}`} 
+                        href={`../teams/${team._id}`} 
                         clickable 
                         color="primary"
                       />
