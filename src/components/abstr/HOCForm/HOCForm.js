@@ -90,7 +90,6 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
         toggleEdit,
         showErrorModal,
         history,
-        saveItemFromServer,
       } = this.props;
 
       toggleLoading(true);

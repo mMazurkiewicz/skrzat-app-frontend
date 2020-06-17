@@ -67,12 +67,21 @@ function Header(props) {
       <Divider />
       <MenuList>
         <MenuItem
-          className={classes.ulItem}
-          component={NavLink}
-          activeClassName="Mui-selected"
-          to="/fairyTales"
-        >
-          Bajki
+            className={classes.ulItem}
+            component={NavLink}
+            activeClassName="Mui-selected"
+            to="/venues"
+          >
+            Placówki
+        </MenuItem>
+        
+        <MenuItem
+            className={classes.ulItem}
+            component={NavLink}
+            activeClassName="Mui-selected"
+            to="/teams"
+          >
+            Ekipy
         </MenuItem>
 
         <MenuItem
@@ -88,9 +97,9 @@ function Header(props) {
           className={classes.ulItem}
           component={NavLink}
           activeClassName="Mui-selected"
-          to="/teams"
+          to="/fairyTales"
         >
-          Ekipy
+          Bajki
         </MenuItem>
       </MenuList>
     </div>
