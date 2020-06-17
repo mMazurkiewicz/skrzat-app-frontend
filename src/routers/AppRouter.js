@@ -9,24 +9,28 @@ import EmployeesListComponent from '../components/employees/EmployessList';
 import EmployeesFormComponent from '../components/employees/edit/EmployeesForm';
 import TeamsListComponent from '../components/teams/TeamsList';
 import TeamsFormComponent from '../components/teams/edit/TeamsForm';
+import VenuesListComponent from '../components/venues/VenuesList';
 
 const AppRouter = () => (
   <Router history={history}>
     <div>
       <Header />
       <Switch>
+        <Route path="/venues" exact component={VenuesListComponent} />
+        {/* <Route path="/venues/:id" exact component={VenuesFormComponent} /> */}
+        
+        <Route path="/teams" exact component={TeamsListComponent} />
+        <Route path="/teams/:id" exact component={TeamsFormComponent} />
+
+        <Route path="/employees" exact component={EmployeesListComponent} />
+        <Route path="/employees/:id" exact component={EmployeesFormComponent} />
+
         <Route path="/fairyTales" exact component={FairyTalesListComponent} />
         <Route
           path="/fairyTales/:id"
           exact
           component={FairyTalesFormComponent}
         />
-
-        <Route path="/employees" exact component={EmployeesListComponent} />
-        <Route path="/employees/:id" exact component={EmployeesFormComponent} />
-
-        <Route path="/teams" exact component={TeamsListComponent} />
-        <Route path="/teams/:id" exact component={TeamsFormComponent} />
       </Switch>
       <ErrorModalComponent />
     </div>
