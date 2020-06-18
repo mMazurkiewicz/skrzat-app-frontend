@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -15,10 +16,19 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-
 import HOCList from '../abstr/HOCList/HOCList';
+import {
+  differenceInDays,
+  differenceInMonths,
+  parseDate,
+} from '../../helpers/dateHelpers';
 
 export class VenuesList extends Component {
+  getDateDiffTooltipText(date) {
+    const diff = differenceInDays(date);
+    return diff === 1 ? `${diff} dzień temu` : `${diff} dni temu`;
+  }
+
   render() {
     const { classes, items, deleteItemOnServer } = this.props;
     return (
@@ -59,13 +69,26 @@ export class VenuesList extends Component {
               )}
               {items.map((item) => (
                 <TableRow key={item._id} hover className={classes.tr}>
-                  <TableCell component="th" scope="row">
+                  <TableCell component="th" scope="row" className={classes.td}>
                     {item.name}
                   </TableCell>
                   <TableCell className={classes.td}>{item.city}</TableCell>
                   <TableCell className={classes.td}>{item.phone}</TableCell>
                   <TableCell className={classes.td}>
-                    {item.lastContact || '-'}
+                    <Tooltip
+                      title={this.getDateDiffTooltipText(item.lastContact)}
+                    >
+                      <Typography
+                        variant="inherit"
+                        color={
+                          differenceInMonths(item.lastContact) > 6
+                            ? 'error'
+                            : 'textPrimary'
+                        }
+                      >
+                        {parseDate(item.lastContact) || '-'}
+                      </Typography>
+                    </Tooltip>
                   </TableCell>
                   <TableCell align="right">
                     <Tooltip title="Edytuj placówkę">

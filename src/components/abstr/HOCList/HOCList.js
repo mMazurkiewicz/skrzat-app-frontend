@@ -24,7 +24,7 @@ const styles = (theme) => ({
     whiteSpace: 'nowrap',
   },
   tr: {
-    transition: '0.2s'
+    transition: '0.2s',
   },
   fab: {
     position: 'absolute',
@@ -33,7 +33,7 @@ const styles = (theme) => ({
   },
   chips: {
     margin: '0 3px 0 0',
-  }
+  },
 });
 
 const HOCList = (WrappedComponent, { prefix, serverRoute }) => {

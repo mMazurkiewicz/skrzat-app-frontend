@@ -38,7 +38,7 @@ const styles = (theme) => ({
   },
   gridWithChips: {
     display: 'flex',
-  }
+  },
 });
 
 const HOCForm = (WrappedComponent, { prefix, route }) => {
@@ -74,9 +74,10 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
       resetState();
     }
 
-    handleChange(field, e) {
+    handleChange(field, e, date) {
       const { handleChangeInput } = this.props;
-      handleChangeInput(field, e.target.value);
+      const value = date ? e : e.target.value;
+      handleChangeInput(field, value);
     }
 
     toggleEditMode() {
@@ -85,12 +86,7 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
     }
 
     sendDataToServer(item) {
-      const {
-        toggleLoading,
-        toggleEdit,
-        showErrorModal,
-        history,
-      } = this.props;
+      const { toggleLoading, toggleEdit, showErrorModal, history } = this.props;
 
       toggleLoading(true);
       axios

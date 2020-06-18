@@ -10,6 +10,7 @@ import EmployeesFormComponent from '../components/employees/edit/EmployeesForm';
 import TeamsListComponent from '../components/teams/TeamsList';
 import TeamsFormComponent from '../components/teams/edit/TeamsForm';
 import VenuesListComponent from '../components/venues/VenuesList';
+import VenuesFormComponent from '../components/venues/edit/VenuesForm';
 
 const AppRouter = () => (
   <Router history={history}>
@@ -17,8 +18,8 @@ const AppRouter = () => (
       <Header />
       <Switch>
         <Route path="/venues" exact component={VenuesListComponent} />
-        {/* <Route path="/venues/:id" exact component={VenuesFormComponent} /> */}
-        
+        <Route path="/venues/:id" exact component={VenuesFormComponent} />
+
         <Route path="/teams" exact component={TeamsListComponent} />
         <Route path="/teams/:id" exact component={TeamsFormComponent} />
 

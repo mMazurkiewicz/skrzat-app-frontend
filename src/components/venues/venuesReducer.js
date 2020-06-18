@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux';
 import { prefix } from './VenuesList';
-// import teamsFormReducer from './edit/teamsFormReducer';
+import venuesFormReducer from './edit/venuesFormReducer';
 
-const teamsDefaultState = {
+const venuesDefaultState = {
   loading: false,
   items: [],
 };
 
-export const listReducer = (state = teamsDefaultState, action) => {
+export const listReducer = (state = venuesDefaultState, action) => {
   switch (action.type) {
     case `${prefix}SAVE_ITEMS_FROM_SERVER`:
       return {
@@ -26,5 +26,5 @@ export const listReducer = (state = teamsDefaultState, action) => {
 
 export default combineReducers({
   list: listReducer,
-  // form: teamsFormReducer
+  form: venuesFormReducer,
 });
