@@ -1,27 +1,21 @@
 /* eslint-disable class-methods-use-this */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
-import DetailsIcon from '@material-ui/icons/Assignment';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import MaterialTable from 'material-table';
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 import HOCList from '../abstr/HOCList/HOCList';
 import {
   differenceInDays,
   differenceInMonths,
   parseDate,
 } from '../../helpers/dateHelpers';
+
+const iconProps = { style: { color: 'rgba(0, 0, 0, 0.54)' } };
 
 export class VenuesList extends Component {
   getDateDiffTooltipText(date) {
@@ -30,92 +24,100 @@ export class VenuesList extends Component {
   }
 
   render() {
-    const { classes, items, deleteItemOnServer } = this.props;
+    const { classes, items, deleteItemOnServer, history } = this.props;
+
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Typography variant="h3" gutterBottom align="center">
-          Placówki
-        </Typography>
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Nazwa</TableCell>
-                <TableCell>Miejscowość</TableCell>
-                <TableCell>Telefon</TableCell>
-                <TableCell>Ostatni kontakt</TableCell>
-                <TableCell align="right">
-                  <Tooltip title="Dodaj nową placówkę">
-                    <IconButton
-                      edge="end"
-                      aria-label="add"
-                      component={Link}
-                      to="/venues/0"
-                    >
-                      <AddIcon />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {items.length === 0 && (
-                <TableRow>
-                  <TableCell component="th" colSpan={5} align="center">
-                    Lista pusta! Dodaj nową placówkę!
-                  </TableCell>
-                </TableRow>
-              )}
-              {items.map((item) => (
-                <TableRow key={item._id} hover className={classes.tr}>
-                  <TableCell component="th" scope="row" className={classes.td}>
-                    {item.name}
-                  </TableCell>
-                  <TableCell className={classes.td}>{item.city}</TableCell>
-                  <TableCell className={classes.td}>{item.phone}</TableCell>
-                  <TableCell className={classes.td}>
-                    <Tooltip
-                      title={this.getDateDiffTooltipText(item.lastContact)}
-                    >
-                      <Typography
-                        variant="inherit"
-                        color={
-                          differenceInMonths(item.lastContact) > 6
-                            ? 'error'
-                            : 'textPrimary'
-                        }
-                      >
-                        {parseDate(item.lastContact) || '-'}
-                      </Typography>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Edytuj placówkę">
-                      <IconButton
-                        edge="end"
-                        aria-label="edit"
-                        component={Link}
-                        to={`/venues/${item._id}`}
-                      >
-                        <DetailsIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Usuń placówkę">
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => deleteItemOnServer(item._id)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Box style={{ textAlign: 'right' }}>
+          <Button
+            // fullWidth
+            variant="outlined"
+            color="primary"
+            className={classes.addButton}
+            startIcon={<AddIcon />}
+            onClick={() => history.push('venues/0')}
+          >
+            Dodaj nową placówkę
+          </Button>
+        </Box>
+
+        <MaterialTable
+          columns={[
+            { title: 'Nazwa', field: 'name' },
+            { title: 'Miejscowość', field: 'city' },
+            { title: 'Telefon', field: 'phone', sorting: false },
+            {
+              title: 'Ostatni kontakt',
+              field: 'lastContact',
+              searchable: false,
+              render: (rowData) => (
+                <Tooltip
+                  title={this.getDateDiffTooltipText(rowData.lastContact)}
+                >
+                  <Typography
+                    variant="inherit"
+                    color={
+                      differenceInMonths(rowData.lastContact) > 6
+                        ? 'error'
+                        : 'textPrimary'
+                    }
+                  >
+                    {parseDate(rowData.lastContact) || '-'}
+                  </Typography>
+                </Tooltip>
+              ),
+            },
+          ]}
+          data={items}
+          title="Placówki"
+          localization={{
+            toolbar: {
+              searchPlaceholder: 'Szukaj...',
+            },
+            body: {
+              emptyDataSourceMessage: 'Lista pusta!',
+            },
+            header: {
+              actions: '',
+            },
+            pagination: {
+              labelRowsSelect: 'wierszy',
+              labelDisplayedRows: '{from}-{to} z {count}',
+              firstAriaLabel: 'Pierwsza strona',
+              firstTooltip: 'Pierwsza strona',
+              previousAriaLabel: 'Poprzednia strona',
+              previousTooltip: 'Poprzednia strona',
+              nextAriaLabel: 'Następna strona',
+              nextTooltip: 'Następna strona',
+              lastAriaLabel: 'Ostatnia strona',
+              lastTooltip: 'Ostatnia strona',
+            },
+          }}
+          options={{
+            searchFieldStyle: {
+              minWidth: '100%',
+            },
+            pageSize: 10,
+            actionsColumnIndex: -1,
+          }}
+          actions={[
+            {
+              icon: 'edit',
+              tooltip: 'Edytuj placówkę',
+              iconProps,
+              onClick: (event, rowData) => {
+                history.push(`venues/${rowData._id}`);
+              },
+            },
+            {
+              icon: 'delete',
+              tooltip: 'Usuń placówkę',
+              iconProps,
+              onClick: (event, rowData) => deleteItemOnServer(rowData._id),
+            },
+          ]}
+        />
       </main>
     );
   }
@@ -128,12 +130,16 @@ VenuesList.propTypes = {
       id: PropTypes.string,
     }),
   }),
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
   classes: PropTypes.shape({
     table: PropTypes.string,
     content: PropTypes.string,
     toolbar: PropTypes.string,
     td: PropTypes.string,
     tr: PropTypes.string,
+    addButton: PropTypes.string,
   }),
   deleteItemOnServer: PropTypes.func,
 };

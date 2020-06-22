@@ -52,6 +52,27 @@ export class TeamsForm extends Component {
     });
   }
 
+  checkForMembers(employee) {
+    const { item } = this.props;
+
+    return item.members.find((member) => {
+      const id = member._id ? member._id : member;
+      return id === employee._id;
+    });
+  }
+
+  prepareDataAndSave() {
+    const { item, sendDataToServer, employeesOptions } = this.props;
+
+    const preparedEmployees = employeesOptions
+      // eslint-disable-next-line react/prop-types
+      .filter(this.checkForMembers)
+      .map((employee) => ({ name: employee.name, _id: employee._id }));
+
+    item.members = preparedEmployees;
+    sendDataToServer(item);
+  }
+
   renderChips(selected) {
     const { employeesOptions, classes } = this.props;
 
@@ -70,28 +91,6 @@ export class TeamsForm extends Component {
         ))}
       </div>
     );
-  }
-
-  checkForMembers(employee) {
-    const { item } = this.props;
-
-    return item.members.find(member => {
-      let id = member._id ? member._id : member;
-      return id === employee._id
-    })
-  }
-
-  prepareDataAndSave() {
-    const { item, sendDataToServer, employeesOptions } = this.props;
-    
-    const preparedEmployees = employeesOptions
-      .filter(
-        this.checkForMembers
-      )
-      .map(employee => ({ name: employee.name, _id: employee._id}));
-
-    item.members = preparedEmployees;
-    sendDataToServer(item);
   }
 
   render() {
@@ -201,6 +200,7 @@ TeamsForm.propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string.isRequired,
     members: PropTypes.array,
+    _id: PropTypes.string.isRequired,
   }),
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -212,6 +212,8 @@ TeamsForm.propTypes = {
     loader: PropTypes.string,
     root: PropTypes.string,
     content: PropTypes.string,
+    chip: PropTypes.string,
+    chips: PropTypes.string,
   }),
   editMode: PropTypes.bool,
   loading: PropTypes.bool,
@@ -219,6 +221,8 @@ TeamsForm.propTypes = {
   goBack: PropTypes.func,
   sendDataToServer: PropTypes.func,
   handleChange: PropTypes.func,
+  employeesOptions: PropTypes.array,
+  saveEmployeesOptions: PropTypes.func.isRequired,
 };
 
 export const prefix = 'TEAMS_FORM_';

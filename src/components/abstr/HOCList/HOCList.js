@@ -26,10 +26,8 @@ const styles = (theme) => ({
   tr: {
     transition: '0.2s',
   },
-  fab: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
+  addButton: {
+    margin: '10px 0 30px 0',
   },
   chips: {
     margin: '0 3px 0 0',
