@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
   ulItem: {
     transition: '0.2s',
-  }
+  },
 }));
 
 function Header(props) {
@@ -67,21 +67,30 @@ function Header(props) {
       <Divider />
       <MenuList>
         <MenuItem
-            className={classes.ulItem}
-            component={NavLink}
-            activeClassName="Mui-selected"
-            to="/venues"
-          >
-            Placówki
+          className={classes.ulItem}
+          component={NavLink}
+          activeClassName="Mui-selected"
+          to="/events"
+        >
+          Przedstawienia
         </MenuItem>
-        
+
         <MenuItem
-            className={classes.ulItem}
-            component={NavLink}
-            activeClassName="Mui-selected"
-            to="/teams"
-          >
-            Ekipy
+          className={classes.ulItem}
+          component={NavLink}
+          activeClassName="Mui-selected"
+          to="/venues"
+        >
+          Placówki
+        </MenuItem>
+
+        <MenuItem
+          className={classes.ulItem}
+          component={NavLink}
+          activeClassName="Mui-selected"
+          to="/teams"
+        >
+          Ekipy
         </MenuItem>
 
         <MenuItem

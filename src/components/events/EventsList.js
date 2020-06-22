@@ -15,31 +15,33 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-
+import { parseDateTime } from '../../helpers/dateHelpers';
 import HOCList from '../abstr/HOCList/HOCList';
 
-export class TeamsList extends Component {
+export class EventsList extends Component {
   render() {
     const { classes, items, deleteItemOnServer } = this.props;
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Typography variant="h3" gutterBottom align="center">
-          Ekipy
+          Przedstawienia
         </Typography>
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Nazwa</TableCell>
-                <TableCell>Członkowie</TableCell>
+                <TableCell>Data</TableCell>
+                <TableCell>Miejsce</TableCell>
+                <TableCell>Ekipa</TableCell>
+                <TableCell>Bajka</TableCell>
                 <TableCell align="right">
-                  <Tooltip title="Dodaj nową ekipę">
+                  <Tooltip title="Dodaj nowe przedstawienie">
                     <IconButton
                       edge="end"
                       aria-label="add"
                       component={Link}
-                      to="/teams/0"
+                      to="/events/0"
                     >
                       <AddIcon />
                     </IconButton>
@@ -50,31 +52,35 @@ export class TeamsList extends Component {
             <TableBody>
               {items.length === 0 && (
                 <TableRow>
-                  <TableCell component="th" colSpan={3} align="center">
-                    Lista pusta! Dodaj nową ekipę!
+                  <TableCell component="th" colSpan={5} align="center">
+                    Lista pusta! Dodaj nowe przedstawienie!
                   </TableCell>
                 </TableRow>
               )}
               {items.map((item) => (
                 <TableRow key={item._id} hover className={classes.tr}>
                   <TableCell component="th" scope="row">
-                    {item.name}
+                    {parseDateTime(item.dateTime)}
                   </TableCell>
                   <TableCell className={classes.td}>
-                    {item.members.map((member) => member.name).join(', ')}
+                    {item.venue.name}
+                  </TableCell>
+                  <TableCell className={classes.td}>{item.team.name}</TableCell>
+                  <TableCell className={classes.td}>
+                    {item.fairyTale.name}
                   </TableCell>
                   <TableCell align="right">
-                    <Tooltip title="Edytuj ekipę">
+                    <Tooltip title="Edytuj przedstawienie">
                       <IconButton
                         edge="end"
                         aria-label="edit"
                         component={Link}
-                        to={`/teams/${item._id}`}
+                        to={`/events/${item._id}`}
                       >
                         <DetailsIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Usuń ekipę">
+                    <Tooltip title="Usuń przedstawienie">
                       <IconButton
                         edge="end"
                         aria-label="delete"
@@ -94,7 +100,7 @@ export class TeamsList extends Component {
   }
 }
 
-TeamsList.propTypes = {
+EventsList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object),
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -112,15 +118,15 @@ TeamsList.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  loading: state.teams.list.loading,
-  items: state.teams.list.items,
+  loading: state.events.list.loading,
+  items: state.events.list.items,
 });
 
-export const prefix = 'TEAMS_LIST_';
+export const prefix = 'EVENTS_LIST_';
 
-const wrappedList = HOCList(TeamsList, {
+const wrappedList = HOCList(EventsList, {
   prefix,
-  serverRoute: 'teams',
+  serverRoute: 'events',
 });
 
 export default connect(mapStateToProps, null)(wrappedList);

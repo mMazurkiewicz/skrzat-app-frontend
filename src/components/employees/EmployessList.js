@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
-import DetailsIcon from '@material-ui/icons/Assignment';
+import DetailsIcon from '@material-ui/icons/Edit';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -70,23 +70,22 @@ export class EmployeesList extends Component {
                   </TableCell>
                   <TableCell className={classes.td}>
                     {item.teams
-                      ? item.teams.map((team, i) => (
+                      ? item.teams.map((team) => (
                           <Tooltip key={team._id} title="Edytuj ekipę">
-                            <Chip 
+                            <Chip
                               key={team._id}
-                              size="small" 
-                              className={classes.chips} 
-                              label={team.name} 
-                              component="a" 
-                              href={`teams/${team._id}`} 
-                              clickable 
+                              size="small"
+                              className={classes.chips}
+                              label={team.name}
+                              component="a"
+                              href={`teams/${team._id}`}
+                              clickable
                               color="primary"
-                              variant='outlined'
+                              variant="outlined"
                             />
                           </Tooltip>
                         ))
-                      : '-'
-                    }
+                      : '-'}
                   </TableCell>
                   <TableCell align="right">
                     <Tooltip title="Edytuj dane pracownika">
@@ -131,6 +130,8 @@ EmployeesList.propTypes = {
     content: PropTypes.string,
     toolbar: PropTypes.string,
     td: PropTypes.string,
+    tr: PropTypes.string,
+    chips: PropTypes.string,
   }),
   deleteItemOnServer: PropTypes.func,
 };

@@ -18,7 +18,7 @@ const styles = (theme) => ({
     },
   },
   td: {
-    maxWidth: '300px',
+    maxWidth: '200px',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
