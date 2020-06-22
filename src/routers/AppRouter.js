@@ -11,12 +11,15 @@ import TeamsListComponent from '../components/teams/TeamsList';
 import TeamsFormComponent from '../components/teams/edit/TeamsForm';
 import VenuesListComponent from '../components/venues/VenuesList';
 import VenuesFormComponent from '../components/venues/edit/VenuesForm';
+import EventsListComponent from '../components/events/EventsList';
 
 const AppRouter = () => (
   <Router history={history}>
     <div>
       <Header />
       <Switch>
+        <Route path="/events" exact component={EventsListComponent} />
+
         <Route path="/venues" exact component={VenuesListComponent} />
         <Route path="/venues/:id" exact component={VenuesFormComponent} />
 

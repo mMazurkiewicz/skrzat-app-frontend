@@ -31,7 +31,6 @@ export class VenuesList extends Component {
         <div className={classes.toolbar} />
         <Box style={{ textAlign: 'right' }}>
           <Button
-            // fullWidth
             variant="outlined"
             color="primary"
             className={classes.addButton}

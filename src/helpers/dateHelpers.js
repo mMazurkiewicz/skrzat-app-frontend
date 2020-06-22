@@ -12,7 +12,12 @@ export const differenceInMonths = (date) =>
 export const parseDate = (date) =>
   !!date && format(new Date(date), 'dd/MM/yyyy');
 
+export const parseDateTime = (dateTime) =>
+  !!dateTime && format(new Date(dateTime), 'dd/MM/yyyy HH:mm');
+
 export default {
   differenceInDays,
   differenceInMonths,
+  parseDate,
+  parseDateTime,
 };
