@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-// import fairyTalesFormReducer from './edit/fairyTalesFormReducer';
+import eventsFormReducer from './edit/eventsFormReducer';
 import { prefix } from './EventsList';
 
 const eventsDefaultState = {
@@ -26,5 +26,5 @@ export const listReducer = (state = eventsDefaultState, action) => {
 
 export default combineReducers({
   list: listReducer,
-  // form: fairyTalesFormReducer,
+  form: eventsFormReducer,
 });
