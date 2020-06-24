@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
-import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
@@ -11,20 +10,12 @@ import EditIcon from '@material-ui/icons/Edit';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
 import UndoIcon from '@material-ui/icons/Undo';
-import MapIcon from '@material-ui/icons/Map';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-  DateTimePicker,
-} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
 import { pl } from 'date-fns/locale';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
-import validateURI from '../../../helpers/uriValidator';
 
 export class EventsForm extends Component {
   constructor(props) {
@@ -78,6 +69,8 @@ export class EventsForm extends Component {
       handleChange,
       sendDataToServer,
       venuesOptions,
+      teamsOptions,
+      fairyTalesOptions,
     } = this.props;
     return (
       <main className={classes.content}>
@@ -89,10 +82,10 @@ export class EventsForm extends Component {
         )}
         {!loading && (
           <Grid container spacing={3} alignItems="flex-end">
-            <Grid item xs={8}>
+            <Grid item xs={6}>
               <MuiPickersUtilsProvider locale={pl} utils={DateFnsUtils}>
                 <DateTimePicker
-                  fullWidth
+                  required
                   id="dateTime"
                   disabled={!editMode}
                   label="Data"
@@ -106,7 +99,7 @@ export class EventsForm extends Component {
               </MuiPickersUtilsProvider>
             </Grid>
 
-            <Grid item xs={2} align="right">
+            <Grid item xs={6} align="right">
               <Tooltip title="Edytuj">
                 <span>
                   <IconButton
@@ -122,40 +115,65 @@ export class EventsForm extends Component {
             </Grid>
 
             <Grid item xs={6}>
-              {/* <FormControl variant="outlined" fullWidth>
-                <InputLabel id="demo-mutiple-chip-label">Miejsce</InputLabel>
-                <Select
-                  disabled={!editMode}
-                  labelId="demo-mutiple-chip-label"
-                  id="demo-mutiple-chip"
-                  multiple
-                  value={item.members.map((member) =>
-                    member._id ? member._id : member
-                  )}
-                  onChange={(e) => handleChange('members', e)}
-                  input={<Input id="select-multiple-chip" />}
-                  renderValue={(selected) => this.renderChips(selected)}
-                  MenuProps={MenuProps}
-                >
-                  {employeesOptions.map((member) => (
-                    <MenuItem key={member._id} value={member._id}>
-                      {member.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl> */}
               <Autocomplete
+                id="venue picker"
+                disabled={!editMode}
                 value={item.venue}
                 onChange={(e, newValue) =>
-                  console.log(e.target, newValue) ||
                   handleChange('venue', newValue, true)
                 }
-                getOptionSelected={(o, v) => o.name === v}
-                id="combo-box-demo"
+                getOptionSelected={(o, v) => o._id === v._id}
                 options={venuesOptions}
-                getOptionLabel={(option) => option.name || option}
+                getOptionLabel={(option) => option.name}
                 renderInput={(params) => (
-                  <TextField {...params} label="Miejsce" variant="outlined" />
+                  <TextField
+                    required
+                    {...params}
+                    label="Miejsce"
+                    variant="outlined"
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={6}>
+              <Autocomplete
+                id="teams picker"
+                disabled={!editMode}
+                value={item.team}
+                onChange={(e, newValue) => handleChange('team', newValue, true)}
+                getOptionSelected={(o, v) => o._id === v._id}
+                options={teamsOptions}
+                getOptionLabel={(option) => option.name}
+                renderInput={(params) => (
+                  <TextField
+                    required
+                    {...params}
+                    label="Ekipa"
+                    variant="outlined"
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={6}>
+              <Autocomplete
+                id="fairyTales picker"
+                disabled={!editMode}
+                value={item.fairyTale}
+                onChange={(e, newValue) =>
+                  handleChange('fairyTale', newValue, true)
+                }
+                getOptionSelected={(o, v) => o._id === v._id}
+                options={fairyTalesOptions}
+                getOptionLabel={(option) => option.name}
+                renderInput={(params) => (
+                  <TextField
+                    required
+                    {...params}
+                    label="Bajka"
+                    variant="outlined"
+                  />
                 )}
               />
             </Grid>
@@ -197,7 +215,13 @@ EventsForm.propTypes = {
       PropTypes.instanceOf(Date),
       PropTypes.string,
     ]),
+    venue: PropTypes.instanceOf(Object),
+    team: PropTypes.instanceOf(Object),
+    fairyTale: PropTypes.instanceOf(Object),
   }),
+  venuesOptions: PropTypes.array.isRequired,
+  teamsOptions: PropTypes.array.isRequired,
+  fairyTalesOptions: PropTypes.array.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,

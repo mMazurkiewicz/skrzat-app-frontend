@@ -74,9 +74,9 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
       resetState();
     }
 
-    handleChange(field, e, date) {
+    handleChange(field, e, withValue) {
       const { handleChangeInput } = this.props;
-      const value = date ? e : e.target.value;
+      const value = withValue ? e : e.target.value;
       handleChangeInput(field, value);
     }
 

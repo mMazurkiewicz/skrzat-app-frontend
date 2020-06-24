@@ -5,14 +5,13 @@ const venuesDefaultState = {
   editMode: false,
   item: {
     dateTime: null,
-    venue: {
-      _id: '',
-      name: '',
-    },
-    fairyTale: {},
-    team: {},
+    venue: null,
+    team: null,
+    fairyTale: null,
   },
   venuesOptions: [],
+  teamsOptions: [],
+  fairyTalesOptions: [],
 };
 
 export default (state = venuesDefaultState, action) => {

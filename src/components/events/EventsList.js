@@ -62,9 +62,13 @@ export class EventsList extends Component {
                   <TableCell component="th" scope="row">
                     {parseDateTime(item.dateTime)}
                   </TableCell>
-                  <TableCell className={classes.td}>
-                    {item.venue.name}
-                  </TableCell>
+
+                  <Tooltip title={item.venue.name}>
+                    <TableCell className={classes.td}>
+                      {item.venue.name}
+                    </TableCell>
+                  </Tooltip>
+
                   <TableCell className={classes.td}>{item.team.name}</TableCell>
                   <TableCell className={classes.td}>
                     {item.fairyTale.name}
