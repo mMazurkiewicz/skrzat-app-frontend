@@ -32,6 +32,12 @@ class HOCFormActions {
     type: `${this.prefix}SAVE_EMPLOYESS_OPTIONS`,
     options,
   });
+
+  addExtraOptionsOptions = (options, field) => ({
+    type: `${this.prefix}ADD_EXTRA_OPTIONS`,
+    options,
+    field,
+  });
 }
 
 export default HOCFormActions;
