@@ -16,7 +16,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
-import Chip from '@material-ui/core/Chip';
+// import Chip from '@material-ui/core/Chip';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
 
 const ITEM_HEIGHT = 48;
@@ -35,7 +35,7 @@ export class TeamsForm extends Component {
     super(props);
     this.employeesRoute = `${window.App.serverPath}employees`;
     this.loadEmployees = this.loadEmployees.bind(this);
-    this.renderChips = this.renderChips.bind(this);
+    // this.renderChips = this.renderChips.bind(this);
     this.prepareDataAndSave = this.prepareDataAndSave.bind(this);
     this.checkForMembers = this.checkForMembers.bind(this);
   }
@@ -73,25 +73,25 @@ export class TeamsForm extends Component {
     sendDataToServer(item);
   }
 
-  renderChips(selected) {
-    const { employeesOptions, classes } = this.props;
+  // renderChips(selected) {
+  //   const { employeesOptions, classes } = this.props;
 
-    const selectedEmployees = employeesOptions.filter(
-      (option) => selected.indexOf(option._id) !== -1
-    );
+  //   const selectedEmployees = employeesOptions.filter(
+  //     (option) => selected.indexOf(option._id) !== -1
+  //   );
 
-    return (
-      <div className={classes.chips}>
-        {selectedEmployees.map((employee) => (
-          <Chip
-            key={employee._id}
-            label={employee.name}
-            className={classes.chip}
-          />
-        ))}
-      </div>
-    );
-  }
+  //   return (
+  //     <div className={classes.chips}>
+  //       {selectedEmployees.map((employee) => (
+  //         <Chip
+  //           key={employee._id}
+  //           label={employee.name}
+  //           className={classes.chip}
+  //         />
+  //       ))}
+  //     </div>
+  //   );
+  // }
 
   render() {
     const {
@@ -103,6 +103,7 @@ export class TeamsForm extends Component {
       goBack,
       handleChange,
       employeesOptions,
+      renderChips,
     } = this.props;
     return (
       <main className={classes.content}>
@@ -155,7 +156,9 @@ export class TeamsForm extends Component {
                   )}
                   onChange={(e) => handleChange('members', e)}
                   input={<Input id="select-multiple-chip" />}
-                  renderValue={(selected) => this.renderChips(selected)}
+                  renderValue={(selected) =>
+                    renderChips(employeesOptions, selected)
+                  }
                   MenuProps={MenuProps}
                 >
                   {employeesOptions.map((member) => (

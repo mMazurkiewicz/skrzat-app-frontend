@@ -35,26 +35,26 @@ export class EventsForm extends Component {
   }
 
   loadVenues() {
-    const { addExtraOptionsOptions } = this.props;
+    const { addExtraOptions } = this.props;
 
     axios.get(this.venuesRoute).then((res) => {
-      addExtraOptionsOptions(res.data, 'venuesOptions');
+      addExtraOptions(res.data, 'venuesOptions');
     });
   }
 
   loadTeams() {
-    const { addExtraOptionsOptions } = this.props;
+    const { addExtraOptions } = this.props;
 
     axios.get(this.teamsRoute).then((res) => {
-      addExtraOptionsOptions(res.data, 'teamsOptions');
+      addExtraOptions(res.data, 'teamsOptions');
     });
   }
 
   loadFairyTales() {
-    const { addExtraOptionsOptions } = this.props;
+    const { addExtraOptions } = this.props;
 
     axios.get(this.fairyTalesRoute).then((res) => {
-      addExtraOptionsOptions(res.data, 'fairyTalesOptions');
+      addExtraOptions(res.data, 'fairyTalesOptions');
     });
   }
 
@@ -239,7 +239,7 @@ EventsForm.propTypes = {
   goBack: PropTypes.func,
   sendDataToServer: PropTypes.func,
   handleChange: PropTypes.func,
-  addExtraOptionsOptions: PropTypes.func,
+  addExtraOptions: PropTypes.func,
 };
 
 export const prefix = 'EVENTS_FORM_';

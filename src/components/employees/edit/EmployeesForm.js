@@ -12,9 +12,31 @@ import SaveIcon from '@material-ui/icons/Save';
 import UndoIcon from '@material-ui/icons/Undo';
 import TextField from '@material-ui/core/TextField';
 import Chip from '@material-ui/core/Chip';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import Input from '@material-ui/core/Input';
+import MenuItem from '@material-ui/core/MenuItem';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
+import rolesOptions from '../../../enums/rolesEnum';
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 export class EmployeesForm extends React.Component {
+  // setDateAndSave() {
+  //   const { handleChange } = this.props;
+
+  //   handleChange('dateCreated', Date.now());
+  // }
+
   render() {
     const {
       classes,
@@ -25,6 +47,7 @@ export class EmployeesForm extends React.Component {
       goBack,
       sendDataToServer,
       handleChange,
+      renderChips,
     } = this.props;
     return (
       <main className={classes.content}>
@@ -35,116 +58,180 @@ export class EmployeesForm extends React.Component {
           </div>
         )}
         {!loading && (
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
-              <FormControl variant="outlined" fullWidth>
-                <TextField
-                  required
-                  id="name"
-                  label="Imię i nazwisko"
-                  value={item.name}
-                  variant="outlined"
-                  multiline
-                  onChange={(e) => handleChange('name', e)}
-                  disabled={!editMode}
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={5} className={classes.gridWithChips}>
-                {
-                  item.teams && item.teams.map(team => (
+          <form className={classes.root}>
+            <Grid container spacing={3}>
+              <Grid item xs={6}>
+                <FormControl variant="outlined" fullWidth>
+                  <TextField
+                    required
+                    id="name"
+                    label="Imię i nazwisko"
+                    value={item.name}
+                    variant="outlined"
+                    multiline
+                    onChange={(e) => handleChange('name', e)}
+                    disabled={!editMode}
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <FormControl required variant="outlined" fullWidth>
+                  <InputLabel id="roles-label">Rola</InputLabel>
+                  <Select
+                    disabled={!editMode}
+                    labelId="roles"
+                    id="roles"
+                    multiple
+                    value={item.roles.map((role) =>
+                      role._id ? role._id : Number(role)
+                    )}
+                    onChange={(e) => handleChange('roles', e)}
+                    input={<Input id="select-multiple-chip" />}
+                    renderValue={(selected) =>
+                      renderChips(rolesOptions, selected)
+                    }
+                    MenuProps={MenuProps}
+                  >
+                    {rolesOptions.map((role, i) => (
+                      <MenuItem key={role._id} value={role._id}>
+                        {role.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={1} className={classes.gridWithChips}>
+                {item.teams &&
+                  item.teams.map((team) => (
                     <Tooltip key={team._id} title="Edytuj ekipę">
-                      <Chip 
+                      <Chip
                         key={team._id}
-                        variant='outlined'
-                        className={classes.chip} 
-                        label={team.name} 
-                        component="a" 
-                        href={`../teams/${team._id}`} 
-                        clickable 
+                        variant="outlined"
+                        className={classes.chip}
+                        label={team.name}
+                        component="a"
+                        href={`../teams/${team._id}`}
+                        clickable
                         color="primary"
                       />
                     </Tooltip>
-                  ))
-                }
-            </Grid>
-            <Grid item xs={1} align="right">
-              <Tooltip title="Edytuj">
-                <span>
-                  <IconButton
-                    disabled={!item._id}
-                    edge="end"
-                    aria-label="edit"
-                    onClick={toggleEditMode}
+                  ))}
+              </Grid>
+              <Grid item xs={1} align="right">
+                <Tooltip title="Edytuj">
+                  <span>
+                    <IconButton
+                      disabled={!item._id}
+                      edge="end"
+                      aria-label="edit"
+                      onClick={toggleEditMode}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              </Grid>
+              <Grid item xs={6}>
+                <FormControl variant="outlined" fullWidth>
+                  <TextField
+                    required
+                    id="email"
+                    label="E-mail"
+                    value={item.email}
+                    variant="outlined"
+                    onChange={(e) => handleChange('email', e)}
+                    disabled={!editMode}
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <FormControl variant="outlined" fullWidth>
+                  <TextField
+                    required
+                    id="phoneNumber"
+                    label="Telefon"
+                    value={item.phoneNumber}
+                    variant="outlined"
+                    onChange={(e) => handleChange('phoneNumber', e)}
+                    disabled={!editMode}
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <FormControl variant="outlined" fullWidth>
+                  <TextField
+                    required
+                    id="password"
+                    label="Hasło"
+                    value={item.password}
+                    variant="outlined"
+                    onChange={(e) => handleChange('password', e)}
+                    disabled={!editMode}
+                    type="password"
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <FormControl variant="outlined" fullWidth>
+                  <TextField
+                    required
+                    id="repeatPassword"
+                    label="Powtórz hasło"
+                    value={item.repeatPassword}
+                    variant="outlined"
+                    onChange={(e) => handleChange('repeatPassword', e)}
+                    disabled={!editMode}
+                    type="password"
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} align="center">
+                <div className={classes.root}>
+                  <Button
+                    variant="outlined"
+                    onClick={goBack}
+                    size="large"
+                    startIcon={<UndoIcon />}
                   >
-                    <EditIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl variant="outlined" fullWidth>
-                <TextField
-                  required
-                  id="mail"
-                  label="E-mail"
-                  value={item.mail}
-                  variant="outlined"
-                  multiline
-                  onChange={(e) => handleChange('mail', e)}
-                  disabled={!editMode}
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl variant="outlined" fullWidth>
-                <TextField
-                  required
-                  id="phoneNumber"
-                  label="Telefon"
-                  value={item.phoneNumber}
-                  variant="outlined"
-                  multiline
-                  onChange={(e) => handleChange('phoneNumber', e)}
-                  disabled={!editMode}
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} align="center">
-              <div className={classes.root}>
-                <Button
-                  variant="outlined"
-                  onClick={goBack}
-                  size="large"
-                  startIcon={<UndoIcon />}
-                >
-                  Wróć
-                </Button>
+                    Wróć
+                  </Button>
 
-                <Button
-                  onClick={() => sendDataToServer(item)}
-                  size="large"
-                  disabled={!editMode}
-                  variant="contained"
-                  color="primary"
-                  startIcon={<SaveIcon />}
-                >
-                  Zapisz
-                </Button>
-              </div>
+                  <Button
+                    onClick={() => sendDataToServer(item)}
+                    size="large"
+                    disabled={!editMode}
+                    variant="contained"
+                    color="primary"
+                    startIcon={<SaveIcon />}
+                  >
+                    Zapisz
+                  </Button>
+                </div>
+              </Grid>
             </Grid>
-          </Grid>
+          </form>
         )}
       </main>
     );
   }
 }
 
+EmployeesForm.defaultProps = {
+  item: PropTypes.shape({
+    roles: [],
+    password: '',
+    repeatPassword: '',
+  }),
+};
+
 EmployeesForm.propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string.isRequired,
     phoneNumber: PropTypes.string.isRequired,
-    mail: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    repeatPassword: PropTypes.string.isRequired,
+    roles: PropTypes.array.isRequired,
     _id: PropTypes.string,
   }),
   classes: PropTypes.shape({

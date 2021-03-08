@@ -6,6 +6,8 @@ import employeesReducer from '../components/employees/EmployeesListReducer';
 import teamsReducer from '../components/teams/teamsReducer';
 import venuesReducer from '../components/venues/venuesListReducer';
 import eventsReducer from '../components/events/eventsListReducer';
+import loginReducer from '../components/login/loginReducer';
+import authReducer from '../auth/authReducer';
 
 const root = combineReducers({
   fairyTales: fairyTalesReducer,
@@ -14,6 +16,8 @@ const root = combineReducers({
   teams: teamsReducer,
   venues: venuesReducer,
   events: eventsReducer,
+  login: loginReducer,
+  auth: authReducer,
 });
 
 export const store = createStore(root, applyMiddleware(thunk));

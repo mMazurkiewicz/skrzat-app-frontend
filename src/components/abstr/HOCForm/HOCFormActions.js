@@ -33,7 +33,7 @@ class HOCFormActions {
     options,
   });
 
-  addExtraOptionsOptions = (options, field) => ({
+  addExtraOptions = (options, field) => ({
     type: `${this.prefix}ADD_EXTRA_OPTIONS`,
     options,
     field,

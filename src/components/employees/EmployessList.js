@@ -63,7 +63,7 @@ export class EmployeesList extends Component {
                     {item.name}
                   </TableCell>
                   <TableCell className={classes.td}>
-                    {item.mail ? item.mail : 'Brak maila :-('}
+                    {item.email ? item.email : 'Brak maila :-('}
                   </TableCell>
                   <TableCell className={classes.td}>
                     {item.phoneNumber}
