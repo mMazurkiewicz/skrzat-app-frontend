@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import Chip from '@material-ui/core/Chip';
 import HOCFormActions from './HOCFormActions';
 import { showErrorModalAction } from '../errorModal/ErrorModalActions';
 
@@ -53,6 +54,7 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
       this.toggleEditMode = this.toggleEditMode.bind(this);
       this.goBack = this.goBack.bind(this);
       this.sendDataToServer = this.sendDataToServer.bind(this);
+      this.renderChips = this.renderChips.bind(this);
     }
 
     componentDidMount() {
@@ -102,6 +104,26 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
         });
     }
 
+    renderChips(options, selected) {
+      const { classes } = this.props;
+
+      const selectedOptions = options.filter(
+        (option) => selected.indexOf(option._id) !== -1
+      );
+
+      return (
+        <div className={classes.chips}>
+          {selectedOptions.map((option) => (
+            <Chip
+              key={option._id}
+              label={option.name}
+              className={classes.chip}
+            />
+          ))}
+        </div>
+      );
+    }
+
     render() {
       return (
         <WrappedComponent
@@ -110,6 +132,7 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
           goBack={this.goBack}
           sendDataToServer={this.sendDataToServer}
           handleChange={this.handleChange}
+          renderChips={this.renderChips}
         />
       );
     }

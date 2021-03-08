@@ -1,5 +1,11 @@
 import React from 'react';
-import { Router, Route, Switch, BrowserRouter } from 'react-router-dom';
+import {
+  Router,
+  Route,
+  Switch,
+  BrowserRouter,
+  Redirect,
+} from 'react-router-dom';
 import Header from '../components/header/Header';
 import history from '../history/history.js';
 import FairyTalesListComponent from '../components/fairyTales/FairyTalesList.js';
@@ -13,13 +19,16 @@ import VenuesListComponent from '../components/venues/VenuesList';
 import VenuesFormComponent from '../components/venues/edit/VenuesForm';
 import EventsListComponent from '../components/events/EventsList';
 import EventsFormComponent from '../components/events/edit/EventsForm';
+import LoginComponent from '../components/login/LoginForm';
 
 const AppRouter = () => (
   <Router history={history}>
     <BrowserRouter>
-      <div>
-        <Header />
-        <Switch>
+      <Switch>
+        <Route path="/login" exact component={LoginComponent} />
+        <Route path="/">
+          <Header />
+
           <Route path="/events" exact component={EventsListComponent} />
           <Route path="/events/:id" exact component={EventsFormComponent} />
 
@@ -42,9 +51,10 @@ const AppRouter = () => (
             exact
             component={FairyTalesFormComponent}
           />
-        </Switch>
-        <ErrorModalComponent />
-      </div>
+          <Redirect to="/" />
+        </Route>
+      </Switch>
+      <ErrorModalComponent />
     </BrowserRouter>
   </Router>
 );

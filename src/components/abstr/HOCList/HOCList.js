@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import HOCListActions from './HOCListActions';
+import { showErrorModalAction } from '../errorModal/ErrorModalActions';
 
 const drawerWidth = 240;
 
@@ -48,12 +49,18 @@ const HOCList = (WrappedComponent, { prefix, serverRoute }) => {
     }
 
     loadData() {
-      const { toggleLoading, saveItemsFromServer } = this.props;
+      const { toggleLoading, saveItemsFromServer, showErrorModal } = this.props;
       toggleLoading(true);
-      axios.get(this.serverRoute).then((res) => {
-        saveItemsFromServer(res.data);
-        toggleLoading(false);
-      });
+      axios
+        .get(this.serverRoute)
+        .then((res) => {
+          saveItemsFromServer(res.data);
+          toggleLoading(false);
+        })
+        .catch((err) => {
+          const error = { err };
+          showErrorModal(error.err.response.data);
+        });
     }
 
     deleteItemOnServer(itemId) {
@@ -84,13 +91,17 @@ const HOCList = (WrappedComponent, { prefix, serverRoute }) => {
     }),
     toggleLoading: PropTypes.func,
     saveItemsFromServer: PropTypes.func,
+    showErrorModal: PropTypes.func,
   };
 
   const styledComponent = withStyles(styles)(HOC);
 
   const actions = new HOCListActions({ prefix });
 
-  return connect(null, actions)(styledComponent);
+  return connect(null, {
+    ...actions,
+    showErrorModal: showErrorModalAction,
+  })(styledComponent);
 };
 
 export default HOCList;

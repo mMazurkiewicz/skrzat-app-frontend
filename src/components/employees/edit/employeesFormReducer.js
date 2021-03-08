@@ -5,9 +5,12 @@ const employeesDefaultState = {
   editMode: false,
   item: {
     name: '',
-    mail: '',
+    email: '',
     phoneNumber: '',
     teams: [],
+    password: '',
+    repeatPassword: '',
+    roles: [],
   },
 };
 
@@ -16,7 +19,7 @@ export default (state = employeesDefaultState, action) => {
     case `${prefix}SAVE_ITEM_FROM_SERVER`:
       return {
         ...state,
-        item: action.item,
+        item: { ...state.item, ...action.item },
       };
     case `${prefix}HANDLE_CHANGE`:
       return {
