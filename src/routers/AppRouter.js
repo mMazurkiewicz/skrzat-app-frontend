@@ -51,7 +51,7 @@ const AppRouter = () => (
             exact
             component={FairyTalesFormComponent}
           />
-          <Redirect to="/" />
+          {/* <Redirect to="/" /> */}
         </Route>
       </Switch>
       <ErrorModalComponent />
