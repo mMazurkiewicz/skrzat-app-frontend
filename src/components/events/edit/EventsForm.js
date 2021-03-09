@@ -15,6 +15,7 @@ import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
 import { pl } from 'date-fns/locale';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
 
 export class EventsForm extends Component {
@@ -26,20 +27,23 @@ export class EventsForm extends Component {
     this.loadVenues = this.loadVenues.bind(this);
     this.loadTeams = this.loadTeams.bind(this);
     this.loadFairyTales = this.loadFairyTales.bind(this);
+    this.loadVenuesDebounced = AwesomeDebouncePromise(this.loadVenues, 500);
   }
 
   componentDidMount() {
-    this.loadVenues();
     this.loadTeams();
     this.loadFairyTales();
   }
 
-  loadVenues() {
+  loadVenues(inputValue) {
     const { addExtraOptions } = this.props;
-
-    axios.get(this.venuesRoute).then((res) => {
-      addExtraOptions(res.data, 'venuesOptions');
-    });
+    if (inputValue.length > 0) {
+      axios
+        .get(this.venuesRoute, { params: { value: inputValue } })
+        .then((res) => {
+          addExtraOptions(res.data, 'venuesOptions');
+        });
+    }
   }
 
   loadTeams() {
@@ -71,7 +75,9 @@ export class EventsForm extends Component {
       venuesOptions,
       teamsOptions,
       fairyTalesOptions,
+      addExtraOptions,
     } = this.props;
+
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
@@ -116,21 +122,42 @@ export class EventsForm extends Component {
 
             <Grid item xs={6}>
               <Autocomplete
+                required
+                autoHighlight
+                noOptionsText="Brak wyników"
                 id="venue picker"
                 disabled={!editMode}
+                filterOptions={(x) => x}
                 value={item.venue}
+                options={venuesOptions}
+                getOptionLabel={(option) => option.name}
+                onInputChange={async (e, value, reason) => {
+                  if (value.length === 0) {
+                    addExtraOptions([], 'venuesOptions');
+                  } else {
+                    await this.loadVenuesDebounced(value);
+                  }
+                }}
                 onChange={(e, newValue) =>
                   handleChange('venue', newValue, true)
                 }
                 getOptionSelected={(o, v) => o._id === v._id}
-                options={venuesOptions}
-                getOptionLabel={(option) => option.name}
                 renderInput={(params) => (
                   <TextField
-                    required
                     {...params}
-                    label="Miejsce"
+                    label="Miejsce *"
                     variant="outlined"
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {loading ? (
+                            <CircularProgress color="inherit" size={20} />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
                   />
                 )}
               />
