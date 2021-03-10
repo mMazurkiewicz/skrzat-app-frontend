@@ -1,11 +1,12 @@
 import { combineReducers } from 'redux';
-import { prefix } from './VenuesList';
 import venuesFormReducer from './edit/venuesFormReducer';
 
 const venuesDefaultState = {
   loading: false,
   items: [],
 };
+
+export const prefix = 'VENUES_LIST_';
 
 export const listReducer = (state = venuesDefaultState, action) => {
   switch (action.type) {
