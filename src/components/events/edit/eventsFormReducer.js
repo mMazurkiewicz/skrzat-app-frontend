@@ -1,4 +1,4 @@
-import { prefix } from './EventsForm';
+export const prefix = 'EVENTS_FORM_';
 
 const venuesDefaultState = {
   loading: false,
@@ -10,6 +10,7 @@ const venuesDefaultState = {
     fairyTale: null,
   },
   venuesOptions: [],
+  venuesLoading: false,
   teamsOptions: [],
   fairyTalesOptions: [],
 };
@@ -33,6 +34,11 @@ export default (state = venuesDefaultState, action) => {
           ...state.item,
           [action.field]: action.value,
         },
+      };
+    case `${prefix}HANDLE_NON_ITEM_CHANGE`:
+      return {
+        ...state,
+        [action.field]: action.value,
       };
     case `${prefix}TOGGLE_EDIT`:
       return {

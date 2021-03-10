@@ -17,6 +17,9 @@ import DateFnsUtils from '@date-io/date-fns';
 import { pl } from 'date-fns/locale';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
+import FormActions from './EventsFormActions';
+import { prefix } from './eventsFormReducer';
+import getVenueLabel from '../../../helpers/getVenueSelectLabel';
 
 export class EventsForm extends Component {
   constructor(props) {
@@ -27,6 +30,7 @@ export class EventsForm extends Component {
     this.loadVenues = this.loadVenues.bind(this);
     this.loadTeams = this.loadTeams.bind(this);
     this.loadFairyTales = this.loadFairyTales.bind(this);
+    this.getVenueSearchValue = this.getVenueSearchValue.bind(this);
     this.loadVenuesDebounced = AwesomeDebouncePromise(this.loadVenues, 500);
   }
 
@@ -35,13 +39,24 @@ export class EventsForm extends Component {
     this.loadFairyTales();
   }
 
+  getVenueSearchValue(inputValue) {
+    const { item } = this.props;
+    const venue = item.venue ? item.venue.name : null;
+    return inputValue.match(venue) ? venue : inputValue;
+  }
+
   loadVenues(inputValue) {
-    const { addExtraOptions } = this.props;
+    const { addExtraOptions, handleNonItemChange } = this.props;
+
+    const searchValue = this.getVenueSearchValue(inputValue);
+
     if (inputValue.length > 0) {
+      handleNonItemChange('venuesLoading', true);
       axios
-        .get(this.venuesRoute, { params: { value: inputValue } })
+        .get(this.venuesRoute, { params: { value: searchValue } })
         .then((res) => {
           addExtraOptions(res.data, 'venuesOptions');
+          handleNonItemChange('venuesLoading', false);
         });
     }
   }
@@ -76,6 +91,7 @@ export class EventsForm extends Component {
       teamsOptions,
       fairyTalesOptions,
       addExtraOptions,
+      venuesLoading,
     } = this.props;
 
     return (
@@ -125,13 +141,15 @@ export class EventsForm extends Component {
                 required
                 autoHighlight
                 noOptionsText="Brak wyników"
+                clearText="Wyczyść"
                 id="venue picker"
                 disabled={!editMode}
                 filterOptions={(x) => x}
                 value={item.venue}
                 options={venuesOptions}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => getVenueLabel(option)}
                 onInputChange={async (e, value, reason) => {
+                  console.log(reason);
                   if (value.length === 0) {
                     addExtraOptions([], 'venuesOptions');
                   } else {
@@ -145,13 +163,15 @@ export class EventsForm extends Component {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Miejsce *"
+                    required
+                    placeholder="Zacznij pisać aby szukać po nazwie lub mieście..."
+                    label="Miejsce"
                     variant="outlined"
                     InputProps={{
                       ...params.InputProps,
                       endAdornment: (
                         <>
-                          {loading ? (
+                          {venuesLoading ? (
                             <CircularProgress color="inherit" size={20} />
                           ) : null}
                           {params.InputProps.endAdornment}
@@ -267,22 +287,24 @@ EventsForm.propTypes = {
   sendDataToServer: PropTypes.func,
   handleChange: PropTypes.func,
   addExtraOptions: PropTypes.func,
+  handleNonItemChange: PropTypes.func,
+  venuesLoading: PropTypes.bool.isRequired,
 };
-
-export const prefix = 'EVENTS_FORM_';
 
 const mapStateToProps = (state) => ({
   loading: state.events.form.loading,
   item: state.events.form.item,
   editMode: state.events.form.editMode,
   venuesOptions: state.events.form.venuesOptions,
+  venuesLoading: state.events.form.venuesLoading,
   teamsOptions: state.events.form.teamsOptions,
   fairyTalesOptions: state.events.form.fairyTalesOptions,
 });
 
 const wrappedForm = HOCForm(EventsForm, {
-  prefix,
   route: 'events',
+  prefix,
+  actions: FormActions,
 });
 
 export default connect(mapStateToProps, null)(wrappedForm);
