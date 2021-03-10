@@ -14,6 +14,12 @@ class HOCFormActions {
     value,
   });
 
+  handleNonItemChange = (field, value) => ({
+    type: `${this.prefix}HANDLE_NON_ITEM_CHANGE`,
+    field,
+    value,
+  });
+
   toggleEdit = (toggle) => ({
     type: `${this.prefix}TOGGLE_EDIT`,
     toggle,
