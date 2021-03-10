@@ -14,6 +14,8 @@ import {
   differenceInMonths,
   parseDate,
 } from '../../helpers/dateHelpers';
+import EventsEditActions from '../events/edit/EventsFormActions';
+import { prefix } from './venuesListReducer';
 
 const iconProps = { style: { color: 'rgba(0, 0, 0, 0.54)' } };
 
@@ -24,7 +26,13 @@ export class VenuesList extends Component {
   }
 
   render() {
-    const { classes, items, deleteItemOnServer, history } = this.props;
+    const {
+      classes,
+      items,
+      deleteItemOnServer,
+      history,
+      setVenueForNewEvent,
+    } = this.props;
 
     return (
       <main className={classes.content}>
@@ -102,6 +110,20 @@ export class VenuesList extends Component {
           }}
           actions={[
             {
+              icon: 'event',
+              tooltip: 'Dodaj nowe przedstawienie',
+              iconProps,
+              onClick: (event, rowData) => {
+                const venue = {
+                  _id: rowData._id,
+                  name: rowData.name,
+                  city: rowData.city,
+                };
+                setVenueForNewEvent('venue', venue);
+                history.push('events/0');
+              },
+            },
+            {
               icon: 'edit',
               tooltip: 'Edytuj placówkę',
               iconProps,
@@ -141,6 +163,7 @@ VenuesList.propTypes = {
     addButton: PropTypes.string,
   }),
   deleteItemOnServer: PropTypes.func,
+  setVenueForNewEvent: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -148,11 +171,13 @@ const mapStateToProps = (state) => ({
   items: state.venues.list.items,
 });
 
-export const prefix = 'VENUES_LIST_';
+const mapActionsToProps = {
+  setVenueForNewEvent: EventsEditActions.handleChangeInput,
+};
 
 const wrappedList = HOCList(VenuesList, {
   prefix,
   serverRoute: 'venues',
 });
 
-export default connect(mapStateToProps, null)(wrappedList);
+export default connect(mapStateToProps, mapActionsToProps)(wrappedList);
