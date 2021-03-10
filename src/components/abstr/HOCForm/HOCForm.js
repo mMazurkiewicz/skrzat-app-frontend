@@ -4,8 +4,8 @@ import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Chip from '@material-ui/core/Chip';
-import HOCFormActions from './HOCFormActions';
 import { showErrorModalAction } from '../errorModal/ErrorModalActions';
+import HOCFormActions from './HOCFormActions';
 
 const drawerWidth = 240;
 
@@ -42,7 +42,7 @@ const styles = (theme) => ({
   },
 });
 
-const HOCForm = (WrappedComponent, { prefix, route }) => {
+const HOCForm = (WrappedComponent, { prefix, actions, route }) => {
   class HOC extends React.Component {
     constructor(props) {
       super(props);
@@ -72,13 +72,13 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
 
     goBack() {
       const { history, resetState } = this.props;
-      history.push(`/${this.route}`);
+      history.goBack();
       resetState();
     }
 
-    handleChange(field, e, withValue) {
+    handleChange(field, e) {
       const { handleChangeInput } = this.props;
-      const value = withValue ? e : e.target.value;
+      const value = e && e.target ? e.target.value : e;
       handleChangeInput(field, value);
     }
 
@@ -157,10 +157,10 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
 
   const styledComponent = withStyles(styles)(HOC);
 
-  const actions = new HOCFormActions({ prefix });
+  const useActions = actions || new HOCFormActions({ prefix });
 
   return connect(null, {
-    ...actions,
+    ...useActions,
     showErrorModal: showErrorModalAction,
   })(styledComponent);
 };

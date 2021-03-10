@@ -14,8 +14,10 @@ import TextField from '@material-ui/core/TextField';
 import Chip from '@material-ui/core/Chip';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
 import MenuItem from '@material-ui/core/MenuItem';
+import Checkbox from '@material-ui/core/Checkbox';
+import ListItemText from '@material-ui/core/ListItemText';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
 import rolesOptions from '../../../enums/rolesEnum';
 
@@ -31,12 +33,6 @@ const MenuProps = {
 };
 
 export class EmployeesForm extends React.Component {
-  // setDateAndSave() {
-  //   const { handleChange } = this.props;
-
-  //   handleChange('dateCreated', Date.now());
-  // }
-
   render() {
     const {
       classes,
@@ -75,31 +71,45 @@ export class EmployeesForm extends React.Component {
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl required variant="outlined" fullWidth>
-                  <InputLabel id="roles-label">Rola</InputLabel>
+                <FormControl
+                  required
+                  variant="outlined"
+                  fullWidth
+                  className={classes.formControl}
+                >
+                  <InputLabel id="roles-label">Role</InputLabel>
                   <Select
+                    required
                     disabled={!editMode}
-                    labelId="roles"
-                    id="roles"
+                    labelId="Role"
+                    id="Role"
                     multiple
                     value={item.roles.map((role) =>
                       role._id ? role._id : Number(role)
                     )}
                     onChange={(e) => handleChange('roles', e)}
-                    input={<Input id="select-multiple-chip" />}
+                    input={
+                      <OutlinedInput
+                        id="select-multiple-chip"
+                        variant="outlined"
+                        label="Role *"
+                      />
+                    }
                     renderValue={(selected) =>
                       renderChips(rolesOptions, selected)
                     }
                     MenuProps={MenuProps}
                   >
-                    {rolesOptions.map((role, i) => (
+                    {rolesOptions.map((role) => (
                       <MenuItem key={role._id} value={role._id}>
-                        {role.name}
+                        <Checkbox checked={item.roles.indexOf(role._id) > -1} />
+                        <ListItemText primary={role.name} />
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
+
               <Grid item xs={1} className={classes.gridWithChips}>
                 {item.teams &&
                   item.teams.map((team) => (
@@ -233,12 +243,16 @@ EmployeesForm.propTypes = {
     repeatPassword: PropTypes.string.isRequired,
     roles: PropTypes.array.isRequired,
     _id: PropTypes.string,
+    teams: PropTypes.array,
   }),
   classes: PropTypes.shape({
     toolbar: PropTypes.string,
     loader: PropTypes.string,
     root: PropTypes.string,
     content: PropTypes.string,
+    gridWithChips: PropTypes.string,
+    chip: PropTypes.string,
+    formControl: PropTypes.string,
   }),
   editMode: PropTypes.bool,
   loading: PropTypes.bool,
@@ -246,6 +260,7 @@ EmployeesForm.propTypes = {
   goBack: PropTypes.func,
   sendDataToServer: PropTypes.func,
   handleChange: PropTypes.func,
+  renderChips: PropTypes.func,
 };
 
 export const prefix = 'EMPLOYEES_FORM_';

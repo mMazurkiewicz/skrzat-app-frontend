@@ -54,9 +54,8 @@ export class LoginForm extends React.Component {
         history.push(`/`);
       })
       .catch((err) => {
-        console.log(1);
         const error = { err };
-        console.log(error);
+        console.log(error.err.response);
         showErrorModal(error.err.response.data.message);
       });
   }
