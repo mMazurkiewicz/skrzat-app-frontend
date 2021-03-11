@@ -70,6 +70,11 @@ const HOCForm = (WrappedComponent, { prefix, actions, route }) => {
       }
     }
 
+    componentWillUnmount() {
+      const { resetState } = this.props;
+      resetState();
+    }
+
     goBack() {
       const { history, resetState } = this.props;
       history.goBack();
@@ -143,6 +148,10 @@ const HOCForm = (WrappedComponent, { prefix, actions, route }) => {
       params: PropTypes.shape({
         id: PropTypes.string,
       }),
+    }),
+    classes: PropTypes.shape({
+      chips: PropTypes.string,
+      chip: PropTypes.string,
     }),
     history: PropTypes.object,
     resetState: PropTypes.func,
