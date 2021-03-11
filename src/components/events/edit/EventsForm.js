@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
 import UndoIcon from '@material-ui/icons/Undo';
+import CancelIcon from '@material-ui/icons/Cancel';
 import TextField from '@material-ui/core/TextField';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -103,10 +102,11 @@ export class EventsForm extends Component {
           </div>
         )}
         {!loading && (
-          <Grid container spacing={3} alignItems="flex-end">
-            <Grid item xs={6}>
+          <Grid container spacing={4} alignItems="flex-end">
+            <Grid item xs={12} md={6}>
               <MuiPickersUtilsProvider locale={pl} utils={DateFnsUtils}>
                 <DateTimePicker
+                  fullWidth
                   required
                   id="dateTime"
                   disabled={!editMode}
@@ -121,22 +121,7 @@ export class EventsForm extends Component {
               </MuiPickersUtilsProvider>
             </Grid>
 
-            <Grid item xs={6} align="right">
-              <Tooltip title="Edytuj">
-                <span>
-                  <IconButton
-                    disabled={!item._id}
-                    edge="end"
-                    aria-label="edit"
-                    onClick={toggleEditMode}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Grid>
-
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <Autocomplete
                 required
                 autoHighlight
@@ -148,17 +133,14 @@ export class EventsForm extends Component {
                 value={item.venue}
                 options={venuesOptions}
                 getOptionLabel={(option) => getVenueLabel(option)}
-                onInputChange={async (e, value, reason) => {
-                  console.log(reason);
+                onInputChange={async (e, value) => {
                   if (value.length === 0) {
                     addExtraOptions([], 'venuesOptions');
                   } else {
                     await this.loadVenuesDebounced(value);
                   }
                 }}
-                onChange={(e, newValue) =>
-                  handleChange('venue', newValue, true)
-                }
+                onChange={(e, newValue) => handleChange('venue', newValue)}
                 getOptionSelected={(o, v) => o._id === v._id}
                 renderInput={(params) => (
                   <TextField
@@ -183,7 +165,7 @@ export class EventsForm extends Component {
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <Autocomplete
                 id="teams picker"
                 disabled={!editMode}
@@ -203,7 +185,7 @@ export class EventsForm extends Component {
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <Autocomplete
                 id="fairyTales picker"
                 disabled={!editMode}
@@ -226,27 +208,49 @@ export class EventsForm extends Component {
             </Grid>
 
             <Grid item xs={12} align="center">
-              <div className={classes.root}>
-                <Button
-                  variant="outlined"
-                  onClick={goBack}
-                  size="large"
-                  startIcon={<UndoIcon />}
-                >
-                  Wróć
-                </Button>
+              {editMode ? (
+                <div className={classes.root}>
+                  <Button
+                    variant="outlined"
+                    onClick={toggleEditMode}
+                    size="large"
+                    startIcon={<CancelIcon />}
+                  >
+                    Anuluj
+                  </Button>
 
-                <Button
-                  onClick={() => sendDataToServer(item)}
-                  size="large"
-                  disabled={!editMode}
-                  variant="contained"
-                  color="primary"
-                  startIcon={<SaveIcon />}
-                >
-                  Zapisz
-                </Button>
-              </div>
+                  <Button
+                    onClick={() => sendDataToServer(item)}
+                    size="large"
+                    variant="contained"
+                    color="primary"
+                    startIcon={<SaveIcon />}
+                  >
+                    Zapisz
+                  </Button>
+                </div>
+              ) : (
+                <div className={classes.root}>
+                  <Button
+                    variant="outlined"
+                    onClick={goBack}
+                    size="large"
+                    startIcon={<UndoIcon />}
+                  >
+                    Wróć
+                  </Button>
+
+                  <Button
+                    variant="outlined"
+                    onClick={toggleEditMode}
+                    size="large"
+                    color="primary"
+                    startIcon={<EditIcon />}
+                  >
+                    Edytuj
+                  </Button>
+                </div>
+              )}
             </Grid>
           </Grid>
         )}
