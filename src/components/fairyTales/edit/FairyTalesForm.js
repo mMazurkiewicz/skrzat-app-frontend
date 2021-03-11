@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
+import CancelIcon from '@material-ui/icons/Cancel';
 import EditIcon from '@material-ui/icons/Edit';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
@@ -35,7 +34,7 @@ export class FairyTalesForm extends Component {
         )}
         {!loading && (
           <Grid container spacing={3}>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" fullWidth>
                 <TextField
                   required
@@ -49,20 +48,7 @@ export class FairyTalesForm extends Component {
                 />
               </FormControl>
             </Grid>
-            <Grid item xs={6} align="right">
-              <Tooltip title="Edytuj">
-                <span>
-                  <IconButton
-                    disabled={!item._id}
-                    edge="end"
-                    aria-label="edit"
-                    onClick={toggleEditMode}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Grid>
+
             <Grid item xs={12}>
               <FormControl variant="outlined" fullWidth>
                 <TextField
@@ -77,27 +63,49 @@ export class FairyTalesForm extends Component {
                 />
               </FormControl>
             </Grid>
+
             <Grid item xs={12} align="center">
               <div className={classes.root}>
-                <Button
-                  variant="outlined"
-                  onClick={goBack}
-                  size="large"
-                  startIcon={<UndoIcon />}
-                >
-                  Wróć
-                </Button>
-
-                <Button
-                  onClick={() => sendDataToServer(item)}
-                  size="large"
-                  disabled={!editMode}
-                  variant="contained"
-                  color="primary"
-                  startIcon={<SaveIcon />}
-                >
-                  Zapisz
-                </Button>
+                {!editMode || !item._id ? (
+                  <Button
+                    variant="outlined"
+                    onClick={goBack}
+                    size="large"
+                    startIcon={<UndoIcon />}
+                  >
+                    Wróć
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    onClick={toggleEditMode}
+                    size="large"
+                    startIcon={<CancelIcon />}
+                  >
+                    Anuluj
+                  </Button>
+                )}
+                {editMode ? (
+                  <Button
+                    onClick={() => sendDataToServer(item)}
+                    size="large"
+                    variant="contained"
+                    color="primary"
+                    startIcon={<SaveIcon />}
+                  >
+                    Zapisz
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    onClick={toggleEditMode}
+                    size="large"
+                    color="primary"
+                    startIcon={<EditIcon />}
+                  >
+                    Edytuj
+                  </Button>
+                )}
               </div>
             </Grid>
           </Grid>

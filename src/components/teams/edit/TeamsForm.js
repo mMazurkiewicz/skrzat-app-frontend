@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
+import Checkbox from '@material-ui/core/Checkbox';
+import ListItemText from '@material-ui/core/ListItemText';
+import CancelIcon from '@material-ui/icons/Cancel';
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -15,8 +16,7 @@ import PropTypes from 'prop-types';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-// import Chip from '@material-ui/core/Chip';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
 
 const ITEM_HEIGHT = 48;
@@ -35,7 +35,6 @@ export class TeamsForm extends Component {
     super(props);
     this.employeesRoute = `${window.App.serverPath}employees`;
     this.loadEmployees = this.loadEmployees.bind(this);
-    // this.renderChips = this.renderChips.bind(this);
     this.prepareDataAndSave = this.prepareDataAndSave.bind(this);
     this.checkForMembers = this.checkForMembers.bind(this);
   }
@@ -73,26 +72,6 @@ export class TeamsForm extends Component {
     sendDataToServer(item);
   }
 
-  // renderChips(selected) {
-  //   const { employeesOptions, classes } = this.props;
-
-  //   const selectedEmployees = employeesOptions.filter(
-  //     (option) => selected.indexOf(option._id) !== -1
-  //   );
-
-  //   return (
-  //     <div className={classes.chips}>
-  //       {selectedEmployees.map((employee) => (
-  //         <Chip
-  //           key={employee._id}
-  //           label={employee.name}
-  //           className={classes.chip}
-  //         />
-  //       ))}
-  //     </div>
-  //   );
-  // }
-
   render() {
     const {
       classes,
@@ -115,7 +94,7 @@ export class TeamsForm extends Component {
         )}
         {!loading && (
           <Grid container spacing={3}>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" fullWidth>
                 <TextField
                   required
@@ -129,67 +108,86 @@ export class TeamsForm extends Component {
                 />
               </FormControl>
             </Grid>
-            <Grid item xs={6} align="right">
-              <Tooltip title="Edytuj">
-                <span>
-                  <IconButton
-                    disabled={!item._id}
-                    edge="end"
-                    aria-label="edit"
-                    onClick={toggleEditMode}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Grid>
-            <Grid item xs={6}>
+
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" fullWidth>
-                <InputLabel id="demo-mutiple-chip-label">Członkowie</InputLabel>
+                <InputLabel id="Członkowie">Członkowie</InputLabel>
                 <Select
+                  required
                   disabled={!editMode}
-                  labelId="demo-mutiple-chip-label"
-                  id="demo-mutiple-chip"
+                  labelId="Członkowie"
+                  id="members"
                   multiple
                   value={item.members.map((member) =>
                     member._id ? member._id : member
                   )}
                   onChange={(e) => handleChange('members', e)}
-                  input={<Input id="select-multiple-chip" />}
+                  input={
+                    <OutlinedInput
+                      id="select-multiple-chip"
+                      variant="outlined"
+                      label="Członkowie *"
+                    />
+                  }
                   renderValue={(selected) =>
                     renderChips(employeesOptions, selected)
                   }
                   MenuProps={MenuProps}
                 >
-                  {employeesOptions.map((member) => (
-                    <MenuItem key={member._id} value={member._id}>
-                      {member.name}
+                  {employeesOptions.map((employee) => (
+                    <MenuItem key={employee._id} value={employee._id}>
+                      <Checkbox
+                        checked={item.members.indexOf(employee._id) > -1}
+                      />
+                      <ListItemText primary={employee.name} />
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
+
             <Grid item xs={12} align="center">
               <div className={classes.root}>
-                <Button
-                  variant="outlined"
-                  onClick={goBack}
-                  size="large"
-                  startIcon={<UndoIcon />}
-                >
-                  Wróć
-                </Button>
-
-                <Button
-                  onClick={this.prepareDataAndSave}
-                  size="large"
-                  disabled={!editMode}
-                  variant="contained"
-                  color="primary"
-                  startIcon={<SaveIcon />}
-                >
-                  Zapisz
-                </Button>
+                {!editMode || !item._id ? (
+                  <Button
+                    variant="outlined"
+                    onClick={goBack}
+                    size="large"
+                    startIcon={<UndoIcon />}
+                  >
+                    Wróć
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    onClick={toggleEditMode}
+                    size="large"
+                    startIcon={<CancelIcon />}
+                  >
+                    Anuluj
+                  </Button>
+                )}
+                {editMode ? (
+                  <Button
+                    onClick={() => this.prepareDataAndSave()}
+                    size="large"
+                    variant="contained"
+                    color="primary"
+                    startIcon={<SaveIcon />}
+                  >
+                    Zapisz
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    onClick={toggleEditMode}
+                    size="large"
+                    color="primary"
+                    startIcon={<EditIcon />}
+                  >
+                    Edytuj
+                  </Button>
+                )}
               </div>
             </Grid>
           </Grid>
@@ -203,7 +201,7 @@ TeamsForm.propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string.isRequired,
     members: PropTypes.array,
-    _id: PropTypes.string.isRequired,
+    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -226,6 +224,7 @@ TeamsForm.propTypes = {
   handleChange: PropTypes.func,
   employeesOptions: PropTypes.array,
   saveEmployeesOptions: PropTypes.func.isRequired,
+  renderChips: PropTypes.func.isRequired,
 };
 
 export const prefix = 'TEAMS_FORM_';

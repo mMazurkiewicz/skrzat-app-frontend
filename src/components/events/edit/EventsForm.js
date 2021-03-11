@@ -208,8 +208,17 @@ export class EventsForm extends Component {
             </Grid>
 
             <Grid item xs={12} align="center">
-              {editMode ? (
-                <div className={classes.root}>
+              <div className={classes.root}>
+                {!editMode || !item._id ? (
+                  <Button
+                    variant="outlined"
+                    onClick={goBack}
+                    size="large"
+                    startIcon={<UndoIcon />}
+                  >
+                    Wróć
+                  </Button>
+                ) : (
                   <Button
                     variant="outlined"
                     onClick={toggleEditMode}
@@ -218,7 +227,8 @@ export class EventsForm extends Component {
                   >
                     Anuluj
                   </Button>
-
+                )}
+                {editMode ? (
                   <Button
                     onClick={() => sendDataToServer(item)}
                     size="large"
@@ -228,18 +238,7 @@ export class EventsForm extends Component {
                   >
                     Zapisz
                   </Button>
-                </div>
-              ) : (
-                <div className={classes.root}>
-                  <Button
-                    variant="outlined"
-                    onClick={goBack}
-                    size="large"
-                    startIcon={<UndoIcon />}
-                  >
-                    Wróć
-                  </Button>
-
+                ) : (
                   <Button
                     variant="outlined"
                     onClick={toggleEditMode}
@@ -249,8 +248,8 @@ export class EventsForm extends Component {
                   >
                     Edytuj
                   </Button>
-                </div>
-              )}
+                )}
+              </div>
             </Grid>
           </Grid>
         )}
@@ -261,7 +260,7 @@ export class EventsForm extends Component {
 
 EventsForm.propTypes = {
   item: PropTypes.shape({
-    _id: PropTypes.string,
+    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     dateTime: PropTypes.oneOfType([
       PropTypes.instanceOf(Date),
       PropTypes.string,

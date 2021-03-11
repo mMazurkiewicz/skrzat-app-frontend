@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
+import CancelIcon from '@material-ui/icons/Cancel';
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -56,7 +56,7 @@ export class VenuesForm extends Component {
         )}
         {!loading && (
           <Grid container spacing={3} alignItems="flex-end">
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" fullWidth>
                 <TextField
                   required
@@ -71,9 +71,10 @@ export class VenuesForm extends Component {
               </FormControl>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={12} md={6}>
               <MuiPickersUtilsProvider locale={pl} utils={DateFnsUtils}>
                 <KeyboardDatePicker
+                  fullWidth
                   disabled={!editMode}
                   id="lastContact"
                   label="Ostatni kontakt"
@@ -87,22 +88,7 @@ export class VenuesForm extends Component {
               </MuiPickersUtilsProvider>
             </Grid>
 
-            <Grid item xs={2} align="right">
-              <Tooltip title="Edytuj">
-                <span>
-                  <IconButton
-                    disabled={!item._id}
-                    edge="end"
-                    aria-label="edit"
-                    onClick={toggleEditMode}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Grid>
-
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" fullWidth>
                 <TextField
                   required
@@ -117,7 +103,7 @@ export class VenuesForm extends Component {
               </FormControl>
             </Grid>
 
-            <Grid item xs={2}>
+            <Grid item xs={4} md={2}>
               <FormControl variant="outlined" fullWidth>
                 <TextField
                   required
@@ -132,7 +118,7 @@ export class VenuesForm extends Component {
               </FormControl>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={8} md={4}>
               <FormControl variant="outlined" fullWidth>
                 <TextField
                   required
@@ -164,7 +150,7 @@ export class VenuesForm extends Component {
               </FormControl>
             </Grid>
 
-            <Grid item xs={2}>
+            <Grid item xs={6} md={2}>
               <FormControl variant="outlined" fullWidth>
                 <TextField
                   required
@@ -179,7 +165,7 @@ export class VenuesForm extends Component {
               </FormControl>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={6} md={4}>
               <FormControl variant="outlined" fullWidth>
                 <TextField
                   required
@@ -194,7 +180,7 @@ export class VenuesForm extends Component {
               </FormControl>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" fullWidth>
                 <TextField
                   required
@@ -215,7 +201,7 @@ export class VenuesForm extends Component {
                   error={!(item.website === '') && !validateURI(item.website)}
                   helperText="Wpisz cały adres, razem z http(s)://"
                   id="website"
-                  label="WWW"
+                  label="strona www"
                   value={item.website}
                   variant="outlined"
                   multiline
@@ -256,25 +242,46 @@ export class VenuesForm extends Component {
 
             <Grid item xs={12} align="center">
               <div className={classes.root}>
-                <Button
-                  variant="outlined"
-                  onClick={goBack}
-                  size="large"
-                  startIcon={<UndoIcon />}
-                >
-                  Wróć
-                </Button>
-
-                <Button
-                  onClick={() => sendDataToServer(item)}
-                  size="large"
-                  disabled={!editMode}
-                  variant="contained"
-                  color="primary"
-                  startIcon={<SaveIcon />}
-                >
-                  Zapisz
-                </Button>
+                {!editMode || !item._id ? (
+                  <Button
+                    variant="outlined"
+                    onClick={goBack}
+                    size="large"
+                    startIcon={<UndoIcon />}
+                  >
+                    Wróć
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    onClick={toggleEditMode}
+                    size="large"
+                    startIcon={<CancelIcon />}
+                  >
+                    Anuluj
+                  </Button>
+                )}
+                {editMode ? (
+                  <Button
+                    onClick={() => sendDataToServer(item)}
+                    size="large"
+                    variant="contained"
+                    color="primary"
+                    startIcon={<SaveIcon />}
+                  >
+                    Zapisz
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    onClick={toggleEditMode}
+                    size="large"
+                    color="primary"
+                    startIcon={<EditIcon />}
+                  >
+                    Edytuj
+                  </Button>
+                )}
               </div>
             </Grid>
           </Grid>
