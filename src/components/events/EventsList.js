@@ -32,7 +32,8 @@ export class EventsList extends Component {
             <TableHead>
               <TableRow>
                 <TableCell>Data</TableCell>
-                <TableCell>Miejsce</TableCell>
+                <TableCell>Placówka</TableCell>
+                <TableCell>Miasto</TableCell>
                 <TableCell>Ekipa</TableCell>
                 <TableCell>Bajka</TableCell>
                 <TableCell align="right">
@@ -68,6 +69,10 @@ export class EventsList extends Component {
                       {item.venue.name}
                     </TableCell>
                   </Tooltip>
+
+                  <TableCell className={classes.td}>
+                    {item.venue.city}
+                  </TableCell>
 
                   <TableCell className={classes.td}>{item.team.name}</TableCell>
                   <TableCell className={classes.td}>
