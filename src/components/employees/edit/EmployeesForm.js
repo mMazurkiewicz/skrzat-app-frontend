@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
+import CancelIcon from '@material-ui/icons/Cancel';
 import EditIcon from '@material-ui/icons/Edit';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
@@ -54,149 +54,139 @@ export class EmployeesForm extends React.Component {
           </div>
         )}
         {!loading && (
-          <form className={classes.root}>
-            <Grid container spacing={3}>
-              <Grid item xs={6}>
-                <FormControl variant="outlined" fullWidth>
-                  <TextField
-                    required
-                    id="name"
-                    label="Imię i nazwisko"
-                    value={item.name}
-                    variant="outlined"
-                    multiline
-                    onChange={(e) => handleChange('name', e)}
-                    disabled={!editMode}
-                  />
-                </FormControl>
+          <Grid container spacing={3}>
+            {item.teams && (
+              <Grid item xs={12} md={12} className={classes.gridWithChips}>
+                {item.teams.map((team) => (
+                  <Tooltip key={team._id} title="Edytuj ekipę">
+                    <Chip
+                      key={team._id}
+                      variant="outlined"
+                      className={classes.chip}
+                      label={team.name}
+                      component="a"
+                      href={`../teams/${team._id}`}
+                      clickable
+                      color="primary"
+                    />
+                  </Tooltip>
+                ))}
               </Grid>
-              <Grid item xs={4}>
-                <FormControl
-                  required
-                  variant="outlined"
-                  fullWidth
-                  className={classes.formControl}
-                >
-                  <InputLabel id="roles-label">Role</InputLabel>
-                  <Select
-                    required
-                    disabled={!editMode}
-                    labelId="Role"
-                    id="Role"
-                    multiple
-                    value={item.roles.map((role) =>
-                      role._id ? role._id : Number(role)
-                    )}
-                    onChange={(e) => handleChange('roles', e)}
-                    input={
-                      <OutlinedInput
-                        id="select-multiple-chip"
-                        variant="outlined"
-                        label="Role *"
-                      />
-                    }
-                    renderValue={(selected) =>
-                      renderChips(rolesOptions, selected)
-                    }
-                    MenuProps={MenuProps}
-                  >
-                    {rolesOptions.map((role) => (
-                      <MenuItem key={role._id} value={role._id}>
-                        <Checkbox checked={item.roles.indexOf(role._id) > -1} />
-                        <ListItemText primary={role.name} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+            )}
 
-              <Grid item xs={1} className={classes.gridWithChips}>
-                {item.teams &&
-                  item.teams.map((team) => (
-                    <Tooltip key={team._id} title="Edytuj ekipę">
-                      <Chip
-                        key={team._id}
-                        variant="outlined"
-                        className={classes.chip}
-                        label={team.name}
-                        component="a"
-                        href={`../teams/${team._id}`}
-                        clickable
-                        color="primary"
-                      />
-                    </Tooltip>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                required
+                id="name"
+                label="Imię i nazwisko"
+                value={item.name}
+                variant="outlined"
+                multiline
+                onChange={(e) => handleChange('name', e)}
+                disabled={!editMode}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <FormControl
+                required
+                variant="outlined"
+                fullWidth
+                className={classes.formControl}
+              >
+                <InputLabel id="roles-label">Role</InputLabel>
+                <Select
+                  required
+                  disabled={!editMode}
+                  labelId="Role"
+                  id="Role"
+                  multiple
+                  value={item.roles.map((role) =>
+                    role._id ? role._id : Number(role)
+                  )}
+                  onChange={(e) => handleChange('roles', e)}
+                  input={
+                    <OutlinedInput
+                      id="select-multiple-chip"
+                      variant="outlined"
+                      label="Role *"
+                    />
+                  }
+                  renderValue={(selected) =>
+                    renderChips(rolesOptions, selected)
+                  }
+                  MenuProps={MenuProps}
+                >
+                  {rolesOptions.map((role) => (
+                    <MenuItem key={role._id} value={role._id}>
+                      <Checkbox checked={item.roles.indexOf(role._id) > -1} />
+                      <ListItemText primary={role.name} />
+                    </MenuItem>
                   ))}
-              </Grid>
-              <Grid item xs={1} align="right">
-                <Tooltip title="Edytuj">
-                  <span>
-                    <IconButton
-                      disabled={!item._id}
-                      edge="end"
-                      aria-label="edit"
-                      onClick={toggleEditMode}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </span>
-                </Tooltip>
-              </Grid>
-              <Grid item xs={6}>
-                <FormControl variant="outlined" fullWidth>
-                  <TextField
-                    required
-                    id="email"
-                    label="E-mail"
-                    value={item.email}
-                    variant="outlined"
-                    onChange={(e) => handleChange('email', e)}
-                    disabled={!editMode}
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item xs={6}>
-                <FormControl variant="outlined" fullWidth>
-                  <TextField
-                    required
-                    id="phoneNumber"
-                    label="Telefon"
-                    value={item.phoneNumber}
-                    variant="outlined"
-                    onChange={(e) => handleChange('phoneNumber', e)}
-                    disabled={!editMode}
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item xs={6}>
-                <FormControl variant="outlined" fullWidth>
-                  <TextField
-                    required
-                    id="password"
-                    label="Hasło"
-                    value={item.password}
-                    variant="outlined"
-                    onChange={(e) => handleChange('password', e)}
-                    disabled={!editMode}
-                    type="password"
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item xs={6}>
-                <FormControl variant="outlined" fullWidth>
-                  <TextField
-                    required
-                    id="repeatPassword"
-                    label="Powtórz hasło"
-                    value={item.repeatPassword}
-                    variant="outlined"
-                    onChange={(e) => handleChange('repeatPassword', e)}
-                    disabled={!editMode}
-                    type="password"
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} align="center">
-                <div className={classes.root}>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                required
+                id="email"
+                label="E-mail"
+                value={item.email}
+                variant="outlined"
+                onChange={(e) => handleChange('email', e)}
+                disabled={!editMode}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                required
+                id="phoneNumber"
+                label="Telefon"
+                value={item.phoneNumber}
+                variant="outlined"
+                onChange={(e) => handleChange('phoneNumber', e)}
+                disabled={!editMode}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <FormControl variant="outlined" fullWidth>
+                <TextField
+                  required
+                  id="password"
+                  label="Hasło"
+                  value={item.password}
+                  variant="outlined"
+                  onChange={(e) => handleChange('password', e)}
+                  disabled={!editMode}
+                  type="password"
+                />
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <FormControl variant="outlined" fullWidth>
+                <TextField
+                  required
+                  id="repeatPassword"
+                  label="Powtórz hasło"
+                  value={item.repeatPassword}
+                  variant="outlined"
+                  onChange={(e) => handleChange('repeatPassword', e)}
+                  disabled={!editMode}
+                  type="password"
+                />
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} align="center">
+              <div className={classes.root}>
+                {!editMode || !item._id ? (
                   <Button
                     variant="outlined"
                     onClick={goBack}
@@ -205,21 +195,40 @@ export class EmployeesForm extends React.Component {
                   >
                     Wróć
                   </Button>
-
+                ) : (
+                  <Button
+                    variant="outlined"
+                    onClick={toggleEditMode}
+                    size="large"
+                    startIcon={<CancelIcon />}
+                  >
+                    Anuluj
+                  </Button>
+                )}
+                {editMode ? (
                   <Button
                     onClick={() => sendDataToServer(item)}
                     size="large"
-                    disabled={!editMode}
                     variant="contained"
                     color="primary"
                     startIcon={<SaveIcon />}
                   >
                     Zapisz
                   </Button>
-                </div>
-              </Grid>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    onClick={toggleEditMode}
+                    size="large"
+                    color="primary"
+                    startIcon={<EditIcon />}
+                  >
+                    Edytuj
+                  </Button>
+                )}
+              </div>
             </Grid>
-          </form>
+          </Grid>
         )}
       </main>
     );

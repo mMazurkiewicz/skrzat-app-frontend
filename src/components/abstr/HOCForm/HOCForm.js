@@ -77,7 +77,7 @@ const HOCForm = (WrappedComponent, { prefix, actions, route }) => {
 
     goBack() {
       const { history, resetState } = this.props;
-      history.goBack();
+      history.push(`/${this.route}`);
       resetState();
     }
 
