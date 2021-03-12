@@ -57,12 +57,18 @@ export class TeamsList extends Component {
               )}
               {items.map((item) => (
                 <TableRow key={item._id} hover className={classes.tr}>
-                  <TableCell component="th" scope="row">
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    style={{ color: item.color }}
+                  >
                     {item.name}
                   </TableCell>
+
                   <TableCell className={classes.td}>
                     {item.members.map((member) => member.name).join(', ')}
                   </TableCell>
+
                   <TableCell align="right">
                     <Tooltip title="Edytuj ekipę">
                       <IconButton
@@ -74,6 +80,7 @@ export class TeamsList extends Component {
                         <DetailsIcon />
                       </IconButton>
                     </Tooltip>
+
                     <Tooltip title="Usuń ekipę">
                       <IconButton
                         edge="end"

@@ -4,6 +4,7 @@ import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import Checkbox from '@material-ui/core/Checkbox';
+import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import CancelIcon from '@material-ui/icons/Cancel';
 import Button from '@material-ui/core/Button';
@@ -14,9 +15,9 @@ import UndoIcon from '@material-ui/icons/Undo';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
+import { CirclePicker } from 'react-color';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
 
 const ITEM_HEIGHT = 48;
@@ -111,7 +112,9 @@ export class TeamsForm extends Component {
 
             <Grid item xs={12} md={6}>
               <FormControl variant="outlined" fullWidth>
-                <InputLabel id="Członkowie">Członkowie</InputLabel>
+                <InputLabel id="Członkowie" required>
+                  Członkowie
+                </InputLabel>
                 <Select
                   required
                   disabled={!editMode}
@@ -144,6 +147,68 @@ export class TeamsForm extends Component {
                   ))}
                 </Select>
               </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={editMode ? 12 : 6}>
+              {editMode ? (
+                <CirclePicker
+                  disabled
+                  width="100%"
+                  color={item.color}
+                  onChange={(color) => handleChange('color', color.hex)}
+                  circleSpacing={10}
+                  circleSize={28}
+                  colors={[
+                    '#f44336',
+                    '#e91e63',
+                    '#aa00ff',
+                    '#673ab7',
+                    '#3f51b5',
+                    '#2196f3',
+                    '#03a9f4',
+                    '#00bcd4',
+                    '#009688',
+                    '#4caf50',
+                    '#8bc34a',
+                    '#cddc39',
+                    '#ffeb3b',
+                    '#ffc107',
+                    '#ff9800',
+                    '#ff5722',
+                    '#795548',
+                    '#607d8b',
+                  ]}
+                />
+              ) : (
+                <Grid container align="left">
+                  <Grid item xs={3}>
+                    <div
+                      style={{
+                        display: 'inline-block',
+                        width: '45px',
+                        height: '45px',
+                        borderRadius: '50%',
+                        backgroundColor: item.color,
+                        margin: '4px 10px 4px 4px',
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={9}>
+                    <TextField
+                      fullWidth
+                      required
+                      id="color"
+                      variant="outlined"
+                      label="Kolor"
+                      value={item.color}
+                      disabled
+                      style={{
+                        color: item.color,
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              )}
             </Grid>
 
             <Grid item xs={12} align="center">
@@ -200,6 +265,7 @@ export class TeamsForm extends Component {
 TeamsForm.propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired,
     members: PropTypes.array,
     _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),

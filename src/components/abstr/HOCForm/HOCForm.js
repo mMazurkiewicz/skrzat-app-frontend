@@ -70,6 +70,12 @@ const HOCForm = (WrappedComponent, { prefix, actions, route }) => {
       }
     }
 
+    componentDidUpdate() {
+      const { match } = this.props;
+      this.id = parseId(match.params.id);
+      this.serverRoute = `${window.App.serverPath}${route}/${this.id}`;
+    }
+
     componentWillUnmount() {
       const { resetState } = this.props;
       resetState();
@@ -99,9 +105,10 @@ const HOCForm = (WrappedComponent, { prefix, actions, route }) => {
       axios
         .post(this.serverRoute, item)
         .then((res) => {
+          history.push(`/${this.route}/${res.data._id}`);
           toggleLoading(false);
           toggleEdit(false);
-          history.push(`/${this.route}/${res.data._id}`);
+          this.handleChange('_id', res.data._id);
         })
         .catch((err) => {
           const error = { err };
