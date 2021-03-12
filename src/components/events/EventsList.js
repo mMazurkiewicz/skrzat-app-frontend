@@ -15,6 +15,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import Chip from '@material-ui/core/Chip';
 import { parseDateTime } from '../../helpers/dateHelpers';
 import HOCList from '../abstr/HOCList/HOCList';
 
@@ -74,7 +75,26 @@ export class EventsList extends Component {
                     {item.venue.city}
                   </TableCell>
 
-                  <TableCell className={classes.td}>{item.team.name}</TableCell>
+                  {/* <TableCell className={classes.td}>{item.team.name}</TableCell> */}
+                  <TableCell className={classes.td}>
+                    <Tooltip key={item.team._id} title="Edytuj ekipę">
+                      <Chip
+                        key={item.team._id}
+                        size="small"
+                        className={classes.chips}
+                        label={item.team.name}
+                        component="a"
+                        href={`teams/${item.team._id}`}
+                        clickable
+                        style={{
+                          color: item.team.color,
+                          borderColor: item.team.color,
+                        }}
+                        variant="outlined"
+                      />
+                    </Tooltip>
+                  </TableCell>
+
                   <TableCell className={classes.td}>
                     {item.fairyTale.name}
                   </TableCell>

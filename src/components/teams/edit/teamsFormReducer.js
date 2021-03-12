@@ -6,6 +6,7 @@ const teamsDefaultState = {
   item: {
     name: '',
     members: [],
+    color: '#aa00ff',
   },
   employeesOptions: [],
 };

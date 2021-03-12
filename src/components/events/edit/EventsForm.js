@@ -15,10 +15,10 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
 import { pl } from 'date-fns/locale';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
+import ListItemText from '@material-ui/core/ListItemText';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
 import FormActions from './EventsFormActions';
 import { prefix } from './eventsFormReducer';
-import getVenueLabel from '../../../helpers/getVenueSelectLabel';
 
 export class EventsForm extends Component {
   constructor(props) {
@@ -131,8 +131,11 @@ export class EventsForm extends Component {
                 disabled={!editMode}
                 filterOptions={(x) => x}
                 value={item.venue}
-                options={venuesOptions}
-                getOptionLabel={(option) => getVenueLabel(option)}
+                options={venuesOptions.sort((a, b) =>
+                  a.city.localeCompare(b.city)
+                )}
+                groupBy={(option) => option.city}
+                getOptionLabel={(option) => option.name}
                 onInputChange={async (e, value) => {
                   if (value.length === 0) {
                     addExtraOptions([], 'venuesOptions');
@@ -147,7 +150,7 @@ export class EventsForm extends Component {
                     {...params}
                     required
                     placeholder="Zacznij pisać aby szukać po nazwie lub mieście..."
-                    label="Miejsce"
+                    label={item.venue ? item.venue.city : 'Miejsce'}
                     variant="outlined"
                     InputProps={{
                       ...params.InputProps,
@@ -174,14 +177,29 @@ export class EventsForm extends Component {
                 getOptionSelected={(o, v) => o._id === v._id}
                 options={teamsOptions}
                 getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                  <TextField
-                    required
-                    {...params}
-                    label="Ekipa"
-                    variant="outlined"
+                renderOption={(option) => (
+                  <ListItemText
+                    primary={option.name}
+                    style={{ color: option.color }}
                   />
                 )}
+                renderInput={(params) => {
+                  const { inputProps } = params;
+                  return (
+                    <TextField
+                      required
+                      {...params}
+                      label="Ekipa"
+                      variant="outlined"
+                      inputProps={{
+                        style: {
+                          color: item.team && item.team.color,
+                        },
+                        ...inputProps,
+                      }}
+                    />
+                  );
+                }}
               />
             </Grid>
 
@@ -260,7 +278,7 @@ export class EventsForm extends Component {
 
 EventsForm.propTypes = {
   item: PropTypes.shape({
-    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     dateTime: PropTypes.oneOfType([
       PropTypes.instanceOf(Date),
       PropTypes.string,

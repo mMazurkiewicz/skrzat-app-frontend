@@ -80,7 +80,10 @@ export class EmployeesList extends Component {
                               component="a"
                               href={`teams/${team._id}`}
                               clickable
-                              color="primary"
+                              style={{
+                                color: team.color,
+                                borderColor: team.color,
+                              }}
                               variant="outlined"
                             />
                           </Tooltip>
