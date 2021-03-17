@@ -45,6 +45,10 @@ a.MuiListItem-root {
   padding: 10px 0 10px 10px;
 }
 
+a {
+  text-decoration: inherit; /* no underline */
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
