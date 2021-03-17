@@ -1,94 +1,120 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
-import DetailsIcon from '@material-ui/icons/Edit';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
-import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import { Grid } from '@material-ui/core';
+import Fade from '@material-ui/core/Fade';
 import HOCList from '../abstr/HOCList/HOCList';
+import { prefix } from './fairyTalesListReducer';
 
 export class FairyTalesList extends Component {
   render() {
-    const { classes, items, deleteItemOnServer } = this.props;
+    const {
+      classes,
+      items,
+      anchorEl,
+      handleDeleteItem,
+      openItemMenu,
+      closeItemMenu,
+      goToEdit,
+    } = this.props;
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Typography variant="h3" gutterBottom align="center">
+        <Typography
+          variant="h3"
+          color="textSecondary"
+          gutterBottom
+          align="center"
+        >
           Bajki
         </Typography>
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Nazwa</TableCell>
-                <TableCell>Opis</TableCell>
-                <TableCell align="right">
-                  <Tooltip title="Dodaj nową bajkę">
+
+        <Grid container spacing={3}>
+          <Grid item xs={12} align="right">
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={(e) => goToEdit(e, 0)}
+            >
+              Dodaj nową bajkę
+            </Button>
+          </Grid>
+          {!items.length && (
+            <Grid item xs={12} align="center">
+              <Typography variant="overline">
+                Lista pusta! Dodaj nową bajkę!
+              </Typography>
+            </Grid>
+          )}
+          {items.map((item, i) => (
+            <Grid item key={item._id} xs={12}>
+              <Paper
+                elevation={3}
+                style={{
+                  borderLeft: `5px solid ${item.color}`,
+                }}
+                onClick={(e) => goToEdit(e, item._id)}
+                className={classes.paper}
+              >
+                <Grid container>
+                  <Grid item xs={11}>
+                    <Typography variant="subtitle1" color="textSecondary">
+                      {item.name}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={1} align="right">
                     <IconButton
+                      className={classes.showOnHover}
+                      size="small"
                       edge="end"
-                      aria-label="add"
-                      component={Link}
-                      to="/fairyTales/0"
+                      aria-label="delete"
+                      onClick={(e) => openItemMenu(e, i)}
                     >
-                      <AddIcon />
+                      <MoreVertIcon />
                     </IconButton>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {items.length === 0 && (
-                <TableRow>
-                  <TableCell component="th" colSpan={3} align="center">
-                    Lista pusta! Dodaj nową bajkę!
-                  </TableCell>
-                </TableRow>
-              )}
-              {items.map((item) => (
-                <TableRow key={item._id} hover className={classes.tr}>
-                  <TableCell component="th" scope="row">
-                    {item.name}
-                  </TableCell>
-                  <TableCell className={classes.td}>
-                    {item.description ? item.description : 'Brak opisu :-('}
-                  </TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Edytuj bajkę">
-                      <IconButton
-                        edge="end"
-                        aria-label="edit"
-                        component={Link}
-                        to={`/fairyTales/${item._id}`}
+                    <Menu
+                      anchorEl={anchorEl[i]}
+                      keepMounted
+                      open={Boolean(anchorEl[i])}
+                      onClose={(e) => closeItemMenu(e, i)}
+                      TransitionComponent={Fade}
+                    >
+                      <MenuItem
+                        onClick={(e) => handleDeleteItem(e, item._id, i)}
                       >
-                        <DetailsIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Usuń bajkę">
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => deleteItemOnServer(item._id)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                        Usuń bajkę
+                      </MenuItem>
+                    </Menu>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <Box
+                      component="div"
+                      my={2}
+                      textOverflow="ellipsis"
+                      overflow="hidden"
+                    >
+                      <Typography noWrap variant="body2">
+                        {item.description}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
       </main>
     );
   }
@@ -102,24 +128,27 @@ FairyTalesList.propTypes = {
     }),
   }),
   classes: PropTypes.shape({
-    table: PropTypes.string,
     content: PropTypes.string,
     toolbar: PropTypes.string,
-    td: PropTypes.string,
-    tr: PropTypes.string,
+    paper: PropTypes.string,
+    showOnHover: PropTypes.string,
   }),
-  deleteItemOnServer: PropTypes.func,
+  anchorEl: PropTypes.arrayOf(PropTypes.object),
+  handleDeleteItem: PropTypes.func,
+  openItemMenu: PropTypes.func.isRequired,
+  closeItemMenu: PropTypes.func.isRequired,
+  goToEdit: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   loading: state.fairyTales.list.loading,
   items: state.fairyTales.list.items,
+  anchorEl: state.fairyTales.list.anchorEl,
 });
-
-export const prefix = 'FAIRYTALES_LIST_';
 
 const wrappedList = HOCList(FairyTalesList, {
   prefix,
+  route: 'fairyTales',
   serverRoute: 'fairyTales',
 });
 

@@ -1,121 +1,148 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
-import DetailsIcon from '@material-ui/icons/Edit';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import Chip from '@material-ui/core/Chip';
-import Typography from '@material-ui/core/Typography';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import { Grid } from '@material-ui/core';
+import Fade from '@material-ui/core/Fade';
+import { prefix } from './employeesListReducer';
 import HOCList from '../abstr/HOCList/HOCList';
 
 export class EmployeesList extends Component {
   render() {
-    const { classes, items, deleteItemOnServer } = this.props;
+    const {
+      classes,
+      items,
+      anchorEl,
+      handleDeleteItem,
+      openItemMenu,
+      closeItemMenu,
+      goToEdit,
+    } = this.props;
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Typography variant="h3" gutterBottom align="center">
+        <Typography
+          variant="h3"
+          color="textSecondary"
+          gutterBottom
+          align="center"
+        >
           Pracownicy
         </Typography>
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Imię i nazwisko</TableCell>
-                <TableCell>E-mail</TableCell>
-                <TableCell>Telefon</TableCell>
-                <TableCell>Ekipy</TableCell>
-                <TableCell align="right">
-                  <Tooltip title="Dodaj nowego pracownika">
+
+        <Grid container spacing={3}>
+          <Grid item xs={12} align="right">
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={(e) => goToEdit(e, 0)}
+            >
+              Dodaj nowego pracownika
+            </Button>
+          </Grid>
+          {!items.length && (
+            <Grid item xs={12} align="center">
+              <Typography variant="overline">
+                Lista pusta! Dodaj nowego pracownika!
+              </Typography>
+            </Grid>
+          )}
+          {items.map((item, i) => (
+            <Grid item key={item._id} xs={12} md={6}>
+              <Paper
+                elevation={3}
+                onClick={(e) => goToEdit(e, item._id)}
+                className={classes.paper}
+              >
+                <Grid container key={item._id} spacing={2}>
+                  <Grid item xs={11} key={item._id}>
+                    <Typography variant="subtitle1" color="textSecondary">
+                      {item.name}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={1} align="right">
                     <IconButton
+                      className={classes.showOnHover}
+                      size="small"
                       edge="end"
-                      aria-label="add"
-                      component={Link}
-                      to="/employees/0"
+                      aria-label="delete"
+                      onClick={(e) => openItemMenu(e, i)}
                     >
-                      <AddIcon />
+                      <MoreVertIcon />
                     </IconButton>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {items.length === 0 && (
-                <TableRow>
-                  <TableCell component="th" colSpan={5} align="center">
-                    Lista pusta! Dodaj nowego pracownika!
-                  </TableCell>
-                </TableRow>
-              )}
-              {items.map((item) => (
-                <TableRow key={item._id} hover className={classes.tr}>
-                  <TableCell component="th" scope="row">
-                    {item.name}
-                  </TableCell>
-                  <TableCell className={classes.td}>
-                    {item.email ? item.email : 'Brak maila :-('}
-                  </TableCell>
-                  <TableCell className={classes.td}>
-                    {item.phoneNumber}
-                  </TableCell>
-                  <TableCell className={classes.td}>
-                    {item.teams
-                      ? item.teams.map((team) => (
-                          <Tooltip key={team._id} title="Edytuj ekipę">
-                            <Chip
-                              key={team._id}
-                              size="small"
-                              className={classes.chips}
-                              label={team.name}
-                              component="a"
-                              href={`teams/${team._id}`}
-                              clickable
-                              style={{
-                                color: team.color,
-                                borderColor: team.color,
-                              }}
-                              variant="outlined"
-                            />
-                          </Tooltip>
-                        ))
-                      : '-'}
-                  </TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Edytuj dane pracownika">
-                      <IconButton
-                        edge="end"
-                        aria-label="edit"
-                        component={Link}
-                        to={`/employees/${item._id}`}
+                    <Menu
+                      id="item-menu"
+                      anchorEl={anchorEl[i]}
+                      keepMounted
+                      open={Boolean(anchorEl[i])}
+                      onClose={(e) => closeItemMenu(e, i)}
+                      TransitionComponent={Fade}
+                    >
+                      <MenuItem
+                        onClick={(e) => handleDeleteItem(e, item._id, i)}
                       >
-                        <DetailsIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Usuń pracownika">
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => deleteItemOnServer(item._id)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                        Usuń {item.name}
+                      </MenuItem>
+                    </Menu>
+                  </Grid>
+
+                  <Grid item xs={12} lg={6} align="left">
+                    <Button
+                      variant="outlined"
+                      component="a"
+                      href={`mailto:${item.email}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {item.email}
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12} lg={6} align="left">
+                    <Button
+                      variant="outlined"
+                      component="a"
+                      href={`tel:${item.phoneNumber}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {item.phoneNumber}
+                    </Button>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    {item.teams.map((team) => (
+                      <Tooltip title="Edytuj ekipę" key={team._id}>
+                        <Chip
+                          key={team._id}
+                          size="small"
+                          className={classes.chips}
+                          label={team.name}
+                          component="p"
+                          onClick={(e) => goToEdit(e, team._id, 'teams')}
+                          clickable
+                          variant="outlined"
+                          style={{
+                            color: team.color,
+                            borderColor: team.color,
+                          }}
+                        />
+                      </Tooltip>
+                    ))}
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
       </main>
     );
   }
@@ -132,22 +159,26 @@ EmployeesList.propTypes = {
     table: PropTypes.string,
     content: PropTypes.string,
     toolbar: PropTypes.string,
-    td: PropTypes.string,
-    tr: PropTypes.string,
     chips: PropTypes.string,
+    paper: PropTypes.string,
+    showOnHover: PropTypes.string,
   }),
-  deleteItemOnServer: PropTypes.func,
+  anchorEl: PropTypes.arrayOf(PropTypes.object),
+  handleDeleteItem: PropTypes.func,
+  openItemMenu: PropTypes.func.isRequired,
+  closeItemMenu: PropTypes.func.isRequired,
+  goToEdit: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   loading: state.employees.list.loading,
   items: state.employees.list.items,
+  anchorEl: state.employees.list.anchorEl,
 });
-
-export const prefix = 'EMPLOYEES_LIST';
 
 const wrappedList = HOCList(EmployeesList, {
   prefix,
+  route: 'employees',
   serverRoute: 'employees',
 });
 

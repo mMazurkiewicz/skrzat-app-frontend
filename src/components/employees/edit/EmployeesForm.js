@@ -67,7 +67,10 @@ export class EmployeesForm extends React.Component {
                       component="a"
                       href={`../teams/${team._id}`}
                       clickable
-                      color="primary"
+                      style={{
+                        color: team.color,
+                        borderColor: team.color,
+                      }}
                     />
                   </Tooltip>
                 ))}

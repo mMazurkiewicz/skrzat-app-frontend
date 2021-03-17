@@ -31,6 +31,7 @@ export class EventsForm extends Component {
     this.loadFairyTales = this.loadFairyTales.bind(this);
     this.getVenueSearchValue = this.getVenueSearchValue.bind(this);
     this.loadVenuesDebounced = AwesomeDebouncePromise(this.loadVenues, 500);
+    this.findTeamColor = this.findTeamColor.bind(this);
   }
 
   componentDidMount() {
@@ -74,6 +75,14 @@ export class EventsForm extends Component {
     axios.get(this.fairyTalesRoute).then((res) => {
       addExtraOptions(res.data, 'fairyTalesOptions');
     });
+  }
+
+  findTeamColor() {
+    const { teamsOptions, item } = this.props;
+
+    const teamId = item.team ? item.team._id : null;
+    const currentTeam = teamsOptions.filter((option) => option._id === teamId);
+    return currentTeam.length ? currentTeam[0].color : null;
   }
 
   render() {
@@ -148,7 +157,7 @@ export class EventsForm extends Component {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    required
+                    required={!item.venue}
                     placeholder="Zacznij pisać aby szukać po nazwie lub mieście..."
                     label={item.venue ? item.venue.city : 'Miejsce'}
                     variant="outlined"
@@ -183,23 +192,18 @@ export class EventsForm extends Component {
                     style={{ color: option.color }}
                   />
                 )}
-                renderInput={(params) => {
-                  const { inputProps } = params;
-                  return (
-                    <TextField
-                      required
-                      {...params}
-                      label="Ekipa"
-                      variant="outlined"
-                      inputProps={{
-                        style: {
-                          color: item.team && item.team.color,
-                        },
-                        ...inputProps,
-                      }}
-                    />
-                  );
+                style={{
+                  borderRadius: '5px',
+                  boxShadow: `inset 31px 0px 0px -23px ${this.findTeamColor()}`,
                 }}
+                renderInput={(params) => (
+                  <TextField
+                    required
+                    {...params}
+                    label="Ekipa"
+                    variant="outlined"
+                  />
+                )}
               />
             </Grid>
 

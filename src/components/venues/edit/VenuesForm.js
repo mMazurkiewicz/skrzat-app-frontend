@@ -79,7 +79,7 @@ export class VenuesForm extends Component {
                   id="lastContact"
                   label="Ostatni kontakt"
                   format="dd/MM/yyyy"
-                  value={item.lastContact}
+                  value={item.lastContact || null}
                   onChange={(e) => handleChange('lastContact', e, true)}
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
@@ -196,34 +196,35 @@ export class VenuesForm extends Component {
             </Grid>
 
             <Grid item xs={12}>
-              <FormControl variant="outlined" fullWidth>
-                <TextField
-                  error={!(item.website === '') && !validateURI(item.website)}
-                  helperText="Wpisz cały adres, razem z http(s)://"
-                  id="website"
-                  label="strona www"
-                  value={item.website}
-                  variant="outlined"
-                  multiline
-                  onChange={(e) => handleChange('website', e)}
-                  disabled={!editMode}
-                  InputProps={{
-                    endAdornment: validateURI(item.website) && (
-                      <InputAdornment
-                        onClick={() => window.open(item.website, '_blank')}
-                        position="end"
-                      >
-                        <Tooltip title="Idź do strony">
-                          <ExitToAppIcon
-                            color="primary"
-                            style={{ cursor: 'pointer' }}
-                          />
-                        </Tooltip>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </FormControl>
+              <TextField
+                fullWidth
+                error={!(item.website === '') && !validateURI(item.website)}
+                helperText="Wpisz adres bez http(s)://"
+                id="website"
+                label="strona www"
+                value={item.website}
+                variant="outlined"
+                multiline
+                onChange={(e) => handleChange('website', e)}
+                disabled={!editMode}
+                InputProps={{
+                  endAdornment: validateURI(item.website) && (
+                    <InputAdornment
+                      onClick={() =>
+                        window.open(`http://${item.website}`, '_blank')
+                      }
+                      position="end"
+                    >
+                      <Tooltip title="Idź do strony">
+                        <ExitToAppIcon
+                          color="primary"
+                          style={{ cursor: 'pointer' }}
+                        />
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
+                }}
+              />
             </Grid>
 
             <Grid item xs={12}>
