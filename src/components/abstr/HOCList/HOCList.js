@@ -31,17 +31,49 @@ const styles = (theme) => ({
     margin: '10px 0 30px 0',
   },
   chips: {
-    margin: '0 3px 0 0',
+    margin: '10px 10px 0 0',
+  },
+  paper: {
+    padding: '15px 20px',
+    height: '100%',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    '&:hover': {
+      boxShadow: theme.shadows[7],
+    },
+    '&:hover $showOnHover': {
+      visibility: 'visible',
+      opacity: '1',
+    },
+  },
+  showOnHover: {
+    visibility: 'visible',
+    opacity: '1',
+    transition: 'all 0.2s',
+    '@media only screen and (any-hover: hover)': {
+      visibility: 'hidden',
+      opacity: '0',
+    },
+  },
+  verticalCenterInGrid: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
 });
 
-const HOCList = (WrappedComponent, { prefix, serverRoute }) => {
+const HOCList = (WrappedComponent, { prefix, serverRoute, route }) => {
   class HOC extends React.Component {
     constructor(props) {
       super(props);
+      this.route = `${route}`;
       this.serverRoute = `${window.App.serverPath}${serverRoute}`;
       this.loadData = this.loadData.bind(this);
       this.deleteItemOnServer = this.deleteItemOnServer.bind(this);
+      this.goToEdit = this.goToEdit.bind(this);
+      this.openItemMenu = this.openItemMenu.bind(this);
+      this.closeItemMenu = this.closeItemMenu.bind(this);
+      this.handleDeleteItem = this.handleDeleteItem.bind(this);
     }
 
     componentDidMount() {
@@ -63,8 +95,39 @@ const HOCList = (WrappedComponent, { prefix, serverRoute }) => {
         });
     }
 
-    deleteItemOnServer(itemId) {
+    deleteItemOnServer(e, itemId) {
+      e.stopPropagation();
       axios.delete(`${this.serverRoute}/${itemId}`).then(() => this.loadData());
+    }
+
+    openItemMenu(e, index) {
+      const { setAnchorEl } = this.props;
+
+      e.stopPropagation();
+      setAnchorEl(e && e.currentTarget, index);
+    }
+
+    closeItemMenu(e, index) {
+      const { setAnchorEl } = this.props;
+      e.stopPropagation();
+      setAnchorEl(null, index);
+    }
+
+    handleDeleteItem(e, id, index) {
+      e.stopPropagation();
+      this.closeItemMenu(e, index);
+      this.deleteItemOnServer(e, id);
+    }
+
+    goToEdit(e, itemId, externalRoute) {
+      const { history } = this.props;
+      e.stopPropagation();
+
+      if (externalRoute) {
+        history.push(`/${externalRoute}/${itemId}`);
+      } else {
+        history.push(`/${this.route}/${itemId}`);
+      }
     }
 
     render() {
@@ -72,6 +135,10 @@ const HOCList = (WrappedComponent, { prefix, serverRoute }) => {
         <WrappedComponent
           {...this.props}
           deleteItemOnServer={this.deleteItemOnServer}
+          goToEdit={this.goToEdit}
+          openItemMenu={this.openItemMenu}
+          closeItemMenu={this.closeItemMenu}
+          handleDeleteItem={this.handleDeleteItem}
         />
       );
     }
@@ -84,14 +151,18 @@ const HOCList = (WrappedComponent, { prefix, serverRoute }) => {
         id: PropTypes.string,
       }),
     }),
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }),
     classes: PropTypes.shape({
       content: PropTypes.string,
       toolbar: PropTypes.string,
       td: PropTypes.string,
     }),
-    toggleLoading: PropTypes.func,
-    saveItemsFromServer: PropTypes.func,
-    showErrorModal: PropTypes.func,
+    toggleLoading: PropTypes.func.isRequired,
+    saveItemsFromServer: PropTypes.func.isRequired,
+    showErrorModal: PropTypes.func.isRequired,
+    setAnchorEl: PropTypes.func.isRequired,
   };
 
   const styledComponent = withStyles(styles)(HOC);

@@ -12,6 +12,12 @@ class HOCListActions {
     type: `${this.prefix}TOGGLE_LOADING`,
     toggle,
   });
+
+  setAnchorEl = (element, index) => ({
+    type: `${this.prefix}SET_ANCHOR_ELEMENT`,
+    element,
+    index,
+  });
 }
 
 export default HOCListActions;
