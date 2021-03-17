@@ -96,18 +96,17 @@ export class TeamsForm extends Component {
         {!loading && (
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
-              <FormControl variant="outlined" fullWidth>
-                <TextField
-                  required
-                  id="name"
-                  label="Nazwa"
-                  value={item.name}
-                  variant="outlined"
-                  multiline
-                  onChange={(e) => handleChange('name', e)}
-                  disabled={!editMode}
-                />
-              </FormControl>
+              <TextField
+                required
+                fullWidth
+                id="name"
+                label="Nazwa"
+                value={item.name}
+                variant="outlined"
+                multiline
+                onChange={(e) => handleChange('name', e)}
+                disabled={!editMode}
+              />
             </Grid>
 
             <Grid item xs={12} md={6}>
@@ -180,34 +179,21 @@ export class TeamsForm extends Component {
                   ]}
                 />
               ) : (
-                <Grid container align="left">
-                  <Grid item xs={3}>
-                    <div
-                      style={{
-                        display: 'inline-block',
-                        width: '45px',
-                        height: '45px',
-                        borderRadius: '50%',
-                        backgroundColor: item.color,
-                        margin: '4px 10px 4px 4px',
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={9}>
-                    <TextField
-                      fullWidth
-                      required
-                      id="color"
-                      variant="outlined"
-                      label="Kolor"
-                      value={item.color}
-                      disabled
-                      style={{
-                        color: item.color,
-                      }}
-                    />
-                  </Grid>
-                </Grid>
+                <TextField
+                  fullWidth
+                  required
+                  id="color"
+                  variant="outlined"
+                  label="Kolor"
+                  value={item.color}
+                  disabled
+                  inputProps={{
+                    style: {
+                      borderLeft: `9px solid ${item.color}`,
+                      borderRadius: '5px',
+                    },
+                  }}
+                />
               )}
             </Grid>
 
