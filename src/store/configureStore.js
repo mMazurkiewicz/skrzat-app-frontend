@@ -2,7 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import fairyTalesReducer from '../components/fairyTales/fairyTalesListReducer';
 import errorModalReducer from '../components/abstr/errorModal/errorModalReducer';
-import employeesReducer from '../components/employees/EmployeesListReducer';
+import employeesReducer from '../components/employees/employeesListReducer';
 import teamsReducer from '../components/teams/teamsReducer';
 import venuesReducer from '../components/venues/venuesListReducer';
 import eventsReducer from '../components/events/eventsListReducer';
