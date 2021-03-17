@@ -1,31 +1,16 @@
 import { combineReducers } from 'redux';
 import venuesFormReducer from './edit/venuesFormReducer';
+import listReducer from '../abstr/HOCList/HOCListReducer';
+
+export const prefix = 'VENUES_LIST_';
 
 const venuesDefaultState = {
   loading: false,
   items: [],
-};
-
-export const prefix = 'VENUES_LIST_';
-
-export const listReducer = (state = venuesDefaultState, action) => {
-  switch (action.type) {
-    case `${prefix}SAVE_ITEMS_FROM_SERVER`:
-      return {
-        ...state,
-        items: action.items,
-      };
-    case `${prefix}TOGGLE_LOADING`:
-      return {
-        ...state,
-        loading: action.toggle,
-      };
-    default:
-      return state;
-  }
+  anchorEl: [],
 };
 
 export default combineReducers({
-  list: listReducer,
+  list: listReducer({ prefix, defaultState: venuesDefaultState }),
   form: venuesFormReducer,
 });

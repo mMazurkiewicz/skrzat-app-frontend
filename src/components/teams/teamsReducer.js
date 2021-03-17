@@ -1,30 +1,19 @@
 import { combineReducers } from 'redux';
-import { prefix } from './TeamsList';
 import teamsFormReducer from './edit/teamsFormReducer';
+import listReducer from '../abstr/HOCList/HOCListReducer';
+
+export const prefix = 'TEAMS_LIST_';
 
 const teamsDefaultState = {
   loading: false,
   items: [],
-};
-
-export const listReducer = (state = teamsDefaultState, action) => {
-  switch (action.type) {
-    case `${prefix}SAVE_ITEMS_FROM_SERVER`:
-      return {
-        ...state,
-        items: action.items,
-      };
-    case `${prefix}TOGGLE_LOADING`:
-      return {
-        ...state,
-        loading: action.toggle,
-      };
-    default:
-      return state;
-  }
+  anchorEl: [],
 };
 
 export default combineReducers({
-  list: listReducer,
+  list: listReducer({
+    prefix,
+    defaultState: teamsDefaultState,
+  }),
   form: teamsFormReducer,
 });
