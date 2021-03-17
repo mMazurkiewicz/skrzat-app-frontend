@@ -210,7 +210,9 @@ export class VenuesForm extends Component {
                 InputProps={{
                   endAdornment: validateURI(item.website) && (
                     <InputAdornment
-                      onClick={() => window.open(item.website, '_blank')}
+                      onClick={() =>
+                        window.open(`http://${item.website}`, '_blank')
+                      }
                       position="end"
                     >
                       <Tooltip title="Idź do strony">

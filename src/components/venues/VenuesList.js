@@ -224,7 +224,7 @@ export class VenuesList extends Component {
                         component="span"
                         onClick={(e) => {
                           e.stopPropagation();
-                          window.open(`https://${item.website}`, '_blank');
+                          window.open(`http://${item.website}`, '_blank');
                         }}
                       >
                         <LanguageIcon />
