@@ -20,6 +20,7 @@ import VenuesFormComponent from '../components/venues/edit/VenuesForm';
 import EventsListComponent from '../components/events/EventsList';
 import EventsFormComponent from '../components/events/edit/EventsForm';
 import LoginComponent from '../components/login/LoginForm';
+import HomeComponent from '../components/home/Home';
 
 const AppRouter = () => (
   <Router history={history}>
@@ -28,6 +29,7 @@ const AppRouter = () => (
         <Route path="/login" exact component={LoginComponent} />
         <Route path="/">
           <Header />
+          <Route path="/" exact component={HomeComponent} />
 
           <Route path="/events" exact component={EventsListComponent} />
           <Route path="/events/:id" exact component={EventsFormComponent} />
