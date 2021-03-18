@@ -14,6 +14,12 @@ class HOCFormActions {
     value,
   });
 
+  handleNonItemChange = (field, value) => ({
+    type: `${this.prefix}HANDLE_NON_ITEM_CHANGE`,
+    field,
+    value,
+  });
+
   toggleEdit = (toggle) => ({
     type: `${this.prefix}TOGGLE_EDIT`,
     toggle,
@@ -26,6 +32,17 @@ class HOCFormActions {
 
   resetState = () => ({
     type: `${this.prefix}RESET_STATE`,
+  });
+
+  saveEmployeesOptions = (options) => ({
+    type: `${this.prefix}SAVE_EMPLOYESS_OPTIONS`,
+    options,
+  });
+
+  addExtraOptions = (options, field) => ({
+    type: `${this.prefix}ADD_EXTRA_OPTIONS`,
+    options,
+    field,
   });
 }
 

@@ -1,25 +1,28 @@
-import { prefix } from './EmployeesForm';
+import { prefix } from './VenuesForm';
 
-const employeesDefaultState = {
+const venuesDefaultState = {
   loading: false,
   editMode: false,
   item: {
     name: '',
-    email: '',
-    phoneNumber: '',
-    teams: [],
-    password: '',
-    repeatPassword: '',
-    roles: [],
+    street: '',
+    streetNo: '',
+    city: '',
+    zip: '',
+    postOffice: '',
+    phone: '',
+    website: '',
+    additionalInfo: '',
+    lastContact: null,
   },
 };
 
-export default (state = employeesDefaultState, action) => {
+export default (state = venuesDefaultState, action) => {
   switch (action.type) {
     case `${prefix}SAVE_ITEM_FROM_SERVER`:
       return {
         ...state,
-        item: { ...state.item, ...action.item },
+        item: action.item,
       };
     case `${prefix}HANDLE_CHANGE`:
       return {
@@ -36,7 +39,7 @@ export default (state = employeesDefaultState, action) => {
       };
     case `${prefix}RESET_STATE`:
       return {
-        ...employeesDefaultState,
+        ...venuesDefaultState,
       };
     default:
       return state;

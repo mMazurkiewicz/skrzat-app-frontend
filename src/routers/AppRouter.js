@@ -1,5 +1,11 @@
 import React from 'react';
-import { Router, Route, Switch } from 'react-router-dom';
+import {
+  Router,
+  Route,
+  Switch,
+  BrowserRouter,
+  Redirect,
+} from 'react-router-dom';
 import Header from '../components/header/Header';
 import history from '../history/history.js';
 import FairyTalesListComponent from '../components/fairyTales/FairyTalesList.js';
@@ -8,26 +14,48 @@ import ErrorModalComponent from '../components/abstr/errorModal/ErrorModal';
 import EmployeesListComponent from '../components/employees/EmployessList';
 import EmployeesFormComponent from '../components/employees/edit/EmployeesForm';
 import TeamsListComponent from '../components/teams/TeamsList';
+import TeamsFormComponent from '../components/teams/edit/TeamsForm';
+import VenuesListComponent from '../components/venues/VenuesList';
+import VenuesFormComponent from '../components/venues/edit/VenuesForm';
+import EventsListComponent from '../components/events/EventsList';
+import EventsFormComponent from '../components/events/edit/EventsForm';
+import LoginComponent from '../components/login/LoginForm';
 
 const AppRouter = () => (
   <Router history={history}>
-    <div>
-      <Header />
+    <BrowserRouter>
       <Switch>
-        <Route path="/fairyTales" exact component={FairyTalesListComponent} />
-        <Route
-          path="/fairyTales/:id"
-          exact
-          component={FairyTalesFormComponent}
-        />
+        <Route path="/login" exact component={LoginComponent} />
+        <Route path="/">
+          <Header />
 
-        <Route path="/employees" exact component={EmployeesListComponent} />
-        <Route path="/employees/:id" exact component={EmployeesFormComponent} />
+          <Route path="/events" exact component={EventsListComponent} />
+          <Route path="/events/:id" exact component={EventsFormComponent} />
 
-        <Route path="/teams" exact component={TeamsListComponent} />
+          <Route path="/venues" exact component={VenuesListComponent} />
+          <Route path="/venues/:id" exact component={VenuesFormComponent} />
+
+          <Route path="/teams" exact component={TeamsListComponent} />
+          <Route path="/teams/:id" exact component={TeamsFormComponent} />
+
+          <Route path="/employees" exact component={EmployeesListComponent} />
+          <Route
+            path="/employees/:id"
+            exact
+            component={EmployeesFormComponent}
+          />
+
+          <Route path="/fairyTales" exact component={FairyTalesListComponent} />
+          <Route
+            path="/fairyTales/:id"
+            exact
+            component={FairyTalesFormComponent}
+          />
+          {/* <Redirect to="/" /> */}
+        </Route>
       </Switch>
       <ErrorModalComponent />
-    </div>
+    </BrowserRouter>
   </Router>
 );
 

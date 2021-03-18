@@ -54,7 +54,12 @@ export class ErrorModal extends React.Component {
         </DialogTitle>
         <Grid container>
           <Grid item xs={12}>
-            <Typography paragraph display="block" className={classes.message}>
+            <Typography
+              align="center"
+              paragraph
+              display="block"
+              className={classes.message}
+            >
               {message}
             </Typography>
           </Grid>

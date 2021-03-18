@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Button from '@material-ui/core/Button';
@@ -13,10 +13,23 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Grid } from '@material-ui/core';
 import Fade from '@material-ui/core/Fade';
-import { prefix } from './employeesListReducer';
+import RoomIcon from '@material-ui/icons/Room';
 import HOCList from '../abstr/HOCList/HOCList';
+import { parseDateTime } from '../../helpers/dateHelpers';
+import { prefix } from './eventsListReducer';
 
-export class EmployeesList extends Component {
+export class EventsList extends Component {
+  constructor(props) {
+    super(props);
+    this.getMapQuery = this.getMapQuery.bind(this);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getMapQuery(item) {
+    const query = `${item.venue.street}+${item.venue.streetNo}+${item.venue.city}`;
+    return `http://maps.google.com/?q=${query}`;
+  }
+
   render() {
     const {
       classes,
@@ -36,9 +49,8 @@ export class EmployeesList extends Component {
           gutterBottom
           align="center"
         >
-          Pracownicy
+          Przedstawienia
         </Typography>
-
         <Grid container spacing={3}>
           <Grid item xs={12} align="right">
             <Button
@@ -47,27 +59,30 @@ export class EmployeesList extends Component {
               startIcon={<AddIcon />}
               onClick={(e) => goToEdit(e, 0)}
             >
-              Dodaj nowego pracownika
+              Dodaj nowe przedstawienie
             </Button>
           </Grid>
           {!items.length && (
             <Grid item xs={12} align="center">
               <Typography variant="overline">
-                Lista pusta! Dodaj nowego pracownika!
+                Lista pusta! Dodaj nowe przedstawienie!
               </Typography>
             </Grid>
           )}
           {items.map((item, i) => (
-            <Grid item key={item._id} xs={12} md={6}>
+            <Grid item key={item._id} xs={12}>
               <Paper
                 elevation={3}
                 onClick={(e) => goToEdit(e, item._id)}
                 className={classes.paper}
+                style={{
+                  borderLeft: `5px solid ${item.team.color}`,
+                }}
               >
-                <Grid container key={item._id} spacing={2}>
-                  <Grid item xs={11} key={item._id}>
+                <Grid container spacing={2}>
+                  <Grid item xs={11} align="justify">
                     <Typography variant="subtitle1" color="textSecondary">
-                      {item.name}
+                      {item.venue.name}
                     </Typography>
                   </Grid>
 
@@ -92,51 +107,76 @@ export class EmployeesList extends Component {
                       <MenuItem
                         onClick={(e) => handleDeleteItem(e, item._id, i)}
                       >
-                        Usuń {item.name}
+                        Usuń przedstawienie
                       </MenuItem>
                     </Menu>
                   </Grid>
 
-                  <Grid item xs={12} lg={6} align="left">
-                    <Button
-                      variant="outlined"
-                      component="a"
-                      href={`mailto:${item.email}`}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {item.email}
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12} lg={6} align="left">
-                    <Button
-                      variant="outlined"
-                      component="a"
-                      href={`tel:${item.phoneNumber}`}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {item.phoneNumber}
-                    </Button>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={4}
+                    md={3}
+                    className={classes.verticalCenterInGrid}
+                  >
+                    <Typography variant="subtitle2" color="textSecondary">
+                      {parseDateTime(item.dateTime)}
+                    </Typography>
                   </Grid>
 
-                  <Grid item xs={12}>
-                    {item.teams.map((team) => (
-                      <Tooltip title="Edytuj ekipę" key={team._id}>
-                        <Chip
-                          key={team._id}
-                          size="small"
-                          className={classes.chips}
-                          label={team.name}
-                          component="p"
-                          onClick={(e) => goToEdit(e, team._id, 'teams')}
-                          clickable
-                          variant="outlined"
-                          style={{
-                            color: team.color,
-                            borderColor: team.color,
-                          }}
-                        />
-                      </Tooltip>
-                    ))}
+                  <Grid item xs={12} md={9} sm={8}>
+                    <Tooltip title="Pokaż na mapie" position="bottom-start">
+                      <IconButton
+                        aria-label="show-on-map"
+                        component="span"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(this.getMapQuery(item), '_blank');
+                        }}
+                      >
+                        <RoomIcon />
+                      </IconButton>
+                    </Tooltip>
+
+                    <Typography
+                      variant="subtitle2"
+                      color="textSecondary"
+                      display="inline"
+                    >
+                      {`${item.venue.street} ${item.venue.streetNo}, ${item.venue.city}`}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={6} md={3}>
+                    <Tooltip title="Edytuj ekipę">
+                      <Chip
+                        size="small"
+                        label={item.team.name}
+                        component="p"
+                        onClick={(e) => goToEdit(e, item.team._id, 'teams')}
+                        clickable
+                        variant="outlined"
+                        style={{
+                          color: item.team.color,
+                          borderColor: item.team.color,
+                        }}
+                      />
+                    </Tooltip>
+                  </Grid>
+
+                  <Grid item xs={6} md={9}>
+                    <Tooltip title="Edytuj bajkę">
+                      <Chip
+                        size="small"
+                        label={item.fairyTale.name}
+                        component="p"
+                        onClick={(e) =>
+                          goToEdit(e, item.fairyTale._id, 'fairyTales')
+                        }
+                        clickable
+                        variant="outlined"
+                      />
+                    </Tooltip>
                   </Grid>
                 </Grid>
               </Paper>
@@ -148,7 +188,7 @@ export class EmployeesList extends Component {
   }
 }
 
-EmployeesList.propTypes = {
+EventsList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object),
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -162,6 +202,7 @@ EmployeesList.propTypes = {
     chips: PropTypes.string,
     paper: PropTypes.string,
     showOnHover: PropTypes.string,
+    verticalCenterInGrid: PropTypes.string,
   }),
   anchorEl: PropTypes.arrayOf(PropTypes.object),
   handleDeleteItem: PropTypes.func,
@@ -171,15 +212,15 @@ EmployeesList.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  loading: state.employees.list.loading,
-  items: state.employees.list.items,
-  anchorEl: state.employees.list.anchorEl,
+  loading: state.events.list.loading,
+  items: state.events.list.items,
+  anchorEl: state.events.list.anchorEl,
 });
 
-const wrappedList = HOCList(EmployeesList, {
+const wrappedList = HOCList(EventsList, {
   prefix,
-  route: 'employees',
-  serverRoute: 'employees',
+  route: 'events',
+  serverRoute: 'events',
 });
 
 export default connect(mapStateToProps, null)(wrappedList);

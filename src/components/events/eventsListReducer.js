@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
-import fairyTalesFormReducer from './edit/fairyTalesFormReducer';
+import eventsFormReducer from './edit/eventsFormReducer';
 import listReducer from '../abstr/HOCList/HOCListReducer';
 
-export const prefix = 'FAIRYTALES_LIST_';
+export const prefix = 'EVENTS_LIST_';
 
-const fairyTalesDefaultState = {
+const eventsDefaultState = {
   loading: false,
   items: [],
   anchorEl: [],
@@ -13,7 +13,7 @@ const fairyTalesDefaultState = {
 export default combineReducers({
   list: listReducer({
     prefix,
-    defaultState: fairyTalesDefaultState,
+    defaultState: eventsDefaultState,
   }),
-  form: fairyTalesFormReducer,
+  form: eventsFormReducer,
 });
