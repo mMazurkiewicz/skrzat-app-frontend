@@ -17,6 +17,7 @@ import RoomIcon from '@material-ui/icons/Room';
 import HOCList from '../abstr/HOCList/HOCList';
 import { parseDateTime } from '../../helpers/dateHelpers';
 import { prefix } from './eventsListReducer';
+import Breadcrumbs from '../abstr/breadcrumbs/Breadcrumbs';
 
 export class EventsList extends Component {
   constructor(props) {
@@ -43,14 +44,8 @@ export class EventsList extends Component {
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Typography
-          variant="h3"
-          color="textSecondary"
-          gutterBottom
-          align="center"
-        >
-          Przedstawienia
-        </Typography>
+        <Breadcrumbs routes={[{ name: 'Przedstawienia' }]} />
+
         <Grid container spacing={3}>
           <Grid item xs={12} align="right">
             <Button

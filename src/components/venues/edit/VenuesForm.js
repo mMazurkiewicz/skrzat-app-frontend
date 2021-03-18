@@ -22,6 +22,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { pl } from 'date-fns/locale';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
 import validateURI from '../../../helpers/uriValidator';
+import Breadcrumbs from '../../abstr/breadcrumbs/Breadcrumbs';
 
 export class VenuesForm extends Component {
   constructor(props) {
@@ -45,10 +46,20 @@ export class VenuesForm extends Component {
       goBack,
       handleChange,
       sendDataToServer,
+      getBreadCrumbName,
     } = this.props;
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
+        <Breadcrumbs
+          routes={[
+            { name: 'Placówki', href: '/venues' },
+            {
+              name: getBreadCrumbName('Nowa placówka'),
+            },
+          ]}
+        />
+
         {loading && (
           <div className={classes.loader}>
             <CircularProgress align="center" />
@@ -323,6 +334,7 @@ VenuesForm.propTypes = {
   goBack: PropTypes.func,
   sendDataToServer: PropTypes.func,
   handleChange: PropTypes.func,
+  getBreadCrumbName: PropTypes.func.isRequired,
 };
 
 export const prefix = 'VENUES_FORM_';

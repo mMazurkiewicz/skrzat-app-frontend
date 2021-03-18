@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import Chip from '@material-ui/core/Chip';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -25,6 +24,7 @@ import {
   parseDate,
 } from '../../helpers/dateHelpers';
 import HOCList from '../abstr/HOCList/HOCList';
+import Breadcrumbs from '../abstr/breadcrumbs/Breadcrumbs';
 
 export class VenuesList extends Component {
   constructor(props) {
@@ -72,14 +72,8 @@ export class VenuesList extends Component {
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Typography
-          variant="h3"
-          color="textSecondary"
-          gutterBottom
-          align="center"
-        >
-          Placówki
-        </Typography>
+        <Breadcrumbs routes={[{ name: 'Placówki' }]} />
+
         <Grid container spacing={3}>
           <Grid item xs={12} align="right">
             <Button
