@@ -15,6 +15,7 @@ import { Grid } from '@material-ui/core';
 import Fade from '@material-ui/core/Fade';
 import { prefix } from './employeesListReducer';
 import HOCList from '../abstr/HOCList/HOCList';
+import Breadcrumbs from '../abstr/breadcrumbs/Breadcrumbs';
 
 export class EmployeesList extends Component {
   render() {
@@ -30,14 +31,7 @@ export class EmployeesList extends Component {
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Typography
-          variant="h3"
-          color="textSecondary"
-          gutterBottom
-          align="center"
-        >
-          Pracownicy
-        </Typography>
+        <Breadcrumbs routes={[{ name: 'Pracownicy' }]} />
 
         <Grid container spacing={3}>
           <Grid item xs={12} align="right">

@@ -14,6 +14,7 @@ import { Grid } from '@material-ui/core';
 import Fade from '@material-ui/core/Fade';
 import HOCList from '../abstr/HOCList/HOCList';
 import { prefix } from './fairyTalesListReducer';
+import Breadcrumbs from '../abstr/breadcrumbs/Breadcrumbs';
 
 export class FairyTalesList extends Component {
   render() {
@@ -29,14 +30,7 @@ export class FairyTalesList extends Component {
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Typography
-          variant="h3"
-          color="textSecondary"
-          gutterBottom
-          align="center"
-        >
-          Bajki
-        </Typography>
+        <Breadcrumbs routes={[{ name: 'Bajki' }]} />
 
         <Grid container spacing={3}>
           <Grid item xs={12} align="right">

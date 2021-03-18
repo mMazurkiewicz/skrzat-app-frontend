@@ -20,6 +20,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
 import rolesOptions from '../../../enums/rolesEnum';
+import Breadcrumbs from '../../abstr/breadcrumbs/Breadcrumbs';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -44,10 +45,19 @@ export class EmployeesForm extends React.Component {
       sendDataToServer,
       handleChange,
       renderChips,
+      getBreadCrumbName,
     } = this.props;
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
+        <Breadcrumbs
+          routes={[
+            { name: 'Pracownicy', href: '/employees' },
+            {
+              name: getBreadCrumbName('Nowy pracownik'),
+            },
+          ]}
+        />
         {loading && (
           <div className={classes.loader}>
             <CircularProgress align="center" />
@@ -273,6 +283,7 @@ EmployeesForm.propTypes = {
   sendDataToServer: PropTypes.func,
   handleChange: PropTypes.func,
   renderChips: PropTypes.func,
+  getBreadCrumbName: PropTypes.func.isRequired,
 };
 
 export const prefix = 'EMPLOYEES_FORM_';
