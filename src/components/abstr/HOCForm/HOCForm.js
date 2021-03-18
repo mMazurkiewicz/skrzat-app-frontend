@@ -55,6 +55,7 @@ const HOCForm = (WrappedComponent, { prefix, actions, route }) => {
       this.goBack = this.goBack.bind(this);
       this.sendDataToServer = this.sendDataToServer.bind(this);
       this.renderChips = this.renderChips.bind(this);
+      this.getBreadCrumbName = this.getBreadCrumbName.bind(this);
     }
 
     componentDidMount() {
@@ -79,6 +80,13 @@ const HOCForm = (WrappedComponent, { prefix, actions, route }) => {
     componentWillUnmount() {
       const { resetState } = this.props;
       resetState();
+    }
+
+    getBreadCrumbName(addNewName, alternativeName) {
+      const { id } = this;
+      const { item } = this.props;
+
+      return id ? alternativeName || item.name || '' : addNewName;
     }
 
     goBack() {
@@ -145,6 +153,7 @@ const HOCForm = (WrappedComponent, { prefix, actions, route }) => {
           sendDataToServer={this.sendDataToServer}
           handleChange={this.handleChange}
           renderChips={this.renderChips}
+          getBreadCrumbName={this.getBreadCrumbName}
         />
       );
     }
@@ -155,6 +164,9 @@ const HOCForm = (WrappedComponent, { prefix, actions, route }) => {
       params: PropTypes.shape({
         id: PropTypes.string,
       }),
+    }),
+    item: PropTypes.shape({
+      name: PropTypes.string,
     }),
     classes: PropTypes.shape({
       chips: PropTypes.string,
