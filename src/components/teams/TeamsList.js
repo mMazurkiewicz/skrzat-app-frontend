@@ -1,90 +1,124 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddIcon from '@material-ui/icons/Add';
-import DetailsIcon from '@material-ui/icons/Assignment';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import Chip from '@material-ui/core/Chip';
+import Typography from '@material-ui/core/Typography';
+import { Grid } from '@material-ui/core';
+import Fade from '@material-ui/core/Fade';
 import HOCList from '../abstr/HOCList/HOCList';
+import { prefix } from './teamsReducer';
 
 export class TeamsList extends Component {
   render() {
-    const { classes, items, deleteItemOnServer } = this.props;
+    const {
+      classes,
+      items,
+      goToEdit,
+      anchorEl,
+      handleDeleteItem,
+      openItemMenu,
+      closeItemMenu,
+    } = this.props;
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Nazwa</TableCell>
-                <TableCell>Członkowie</TableCell>
-                <TableCell align="right">
-                  <Tooltip title="Dodaj nową ekipę">
+        <Typography
+          variant="h3"
+          color="textSecondary"
+          gutterBottom
+          align="center"
+        >
+          Ekipy
+        </Typography>
+        <Grid container spacing={3}>
+          <Grid item xs={12} align="right">
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={(e) => goToEdit(e, 0)}
+            >
+              Dodaj nową ekipę
+            </Button>
+          </Grid>
+          {!items.length && (
+            <Grid item xs={12} align="center">
+              <Typography variant="overline">
+                Lista pusta! Dodaj nową ekipę!
+              </Typography>
+            </Grid>
+          )}
+          {items.map((item, i) => (
+            <Grid item key={item._id} xs={12} md={6}>
+              <Paper
+                elevation={3}
+                style={{
+                  borderLeft: `5px solid ${item.color}`,
+                }}
+                onClick={(e) => goToEdit(e, item._id)}
+                className={classes.paper}
+              >
+                <Grid container spacing={2}>
+                  <Grid item xs={11}>
+                    <Typography variant="subtitle1" color="textSecondary">
+                      {item.name}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={1} align="right">
                     <IconButton
+                      className={classes.showOnHover}
+                      size="small"
                       edge="end"
-                      aria-label="add"
-                      component={Link}
-                      to="/teams/0"
+                      aria-label="delete"
+                      onClick={(e) => openItemMenu(e, i)}
                     >
-                      <AddIcon />
+                      <MoreVertIcon />
                     </IconButton>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {items.length === 0 && (
-                <TableRow>
-                  <TableCell component="th" colSpan={3} align="center">
-                    Lista pusta! Dodaj nową ekipę!
-                  </TableCell>
-                </TableRow>
-              )}
-              {items.map((item) => (
-                <TableRow key={item._id} hover>
-                  <TableCell component="th" scope="row">
-                    {item.name}
-                  </TableCell>
-                  <TableCell className={classes.td}>
-                    {item.members.map((member) => member.name).join(', ')}
-                  </TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Edytuj ekipę">
-                      <IconButton
-                        edge="end"
-                        aria-label="edit"
-                        component={Link}
-                        to={`/teams/${item._id}`}
+                    <Menu
+                      id="item-menu"
+                      anchorEl={anchorEl[i]}
+                      keepMounted
+                      open={Boolean(anchorEl[i])}
+                      onClose={(e) => closeItemMenu(e, i)}
+                      TransitionComponent={Fade}
+                    >
+                      <MenuItem
+                        onClick={(e) => handleDeleteItem(e, item._id, i)}
                       >
-                        <DetailsIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Usuń ekipę">
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => deleteItemOnServer(item._id)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                        Usuń ekipę
+                      </MenuItem>
+                    </Menu>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    {item.members.map((member) => (
+                      <Tooltip key={member._id} title="Edytuj pracownika">
+                        <Chip
+                          size="small"
+                          className={classes.chips}
+                          label={member.name}
+                          component="p"
+                          onClick={(e) => goToEdit(e, member._id, 'employees')}
+                          clickable
+                          variant="outlined"
+                        />
+                      </Tooltip>
+                    ))}
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
       </main>
     );
   }
@@ -97,24 +131,33 @@ TeamsList.propTypes = {
       id: PropTypes.string,
     }),
   }),
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
   classes: PropTypes.shape({
-    table: PropTypes.string,
     content: PropTypes.string,
     toolbar: PropTypes.string,
-    td: PropTypes.string,
+    title: PropTypes.string,
+    paper: PropTypes.string,
+    chips: PropTypes.string,
+    showOnHover: PropTypes.string,
   }),
-  deleteItemOnServer: PropTypes.func,
+  handleDeleteItem: PropTypes.func.isRequired,
+  openItemMenu: PropTypes.func.isRequired,
+  closeItemMenu: PropTypes.func.isRequired,
+  goToEdit: PropTypes.func.isRequired,
+  anchorEl: PropTypes.arrayOf(PropTypes.object),
 };
 
 const mapStateToProps = (state) => ({
   loading: state.teams.list.loading,
   items: state.teams.list.items,
+  anchorEl: state.teams.list.anchorEl,
 });
-
-export const prefix = 'TEAMS_LIST_';
 
 const wrappedList = HOCList(TeamsList, {
   prefix,
+  route: 'teams',
   serverRoute: 'teams',
 });
 

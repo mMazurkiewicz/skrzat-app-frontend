@@ -12,7 +12,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutUser } from '../login/LoginActions';
 
 const drawerWidth = 240;
 
@@ -44,17 +46,30 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  ulItem: {
+    transition: '0.2s',
+  },
+  logoutButton: {
+    position: 'absolute',
+    right: 0,
+    padding: '20px',
+    cursor: 'pointer',
+  },
 }));
 
 function Header(props) {
   const { window } = props;
-  const classes = useStyles();
   const theme = useTheme();
+  const classes = useStyles(theme);
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const authState = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const drawer = (
     <div>
@@ -64,14 +79,34 @@ function Header(props) {
       <Divider />
       <MenuList>
         <MenuItem
+          className={classes.ulItem}
           component={NavLink}
           activeClassName="Mui-selected"
-          to="/fairyTales"
+          to="/events"
         >
-          Bajki
+          Przedstawienia
         </MenuItem>
 
         <MenuItem
+          className={classes.ulItem}
+          component={NavLink}
+          activeClassName="Mui-selected"
+          to="/venues"
+        >
+          Placówki
+        </MenuItem>
+
+        <MenuItem
+          className={classes.ulItem}
+          component={NavLink}
+          activeClassName="Mui-selected"
+          to="/teams"
+        >
+          Ekipy
+        </MenuItem>
+
+        <MenuItem
+          className={classes.ulItem}
           component={NavLink}
           activeClassName="Mui-selected"
           to="/employees"
@@ -80,11 +115,12 @@ function Header(props) {
         </MenuItem>
 
         <MenuItem
+          className={classes.ulItem}
           component={NavLink}
           activeClassName="Mui-selected"
-          to="/teams"
+          to="/fairyTales"
         >
-          Ekipy
+          Bajki
         </MenuItem>
       </MenuList>
     </div>
@@ -110,10 +146,17 @@ function Header(props) {
           <Typography variant="h6" noWrap>
             SkrzatApp!
           </Typography>
+          {authState._id && (
+            <Typography
+              className={classes.logoutButton}
+              onClick={() => dispatch(logoutUser(history))}
+            >
+              Logout
+            </Typography>
+          )}
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer
             container={container}

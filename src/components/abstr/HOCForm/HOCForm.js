@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import HOCFormActions from './HOCFormActions';
+import Chip from '@material-ui/core/Chip';
 import { showErrorModalAction } from '../errorModal/ErrorModalActions';
+import HOCFormActions from './HOCFormActions';
 
 const drawerWidth = 240;
 
@@ -32,9 +33,16 @@ const styles = (theme) => ({
       marginLeft: drawerWidth,
     },
   },
+  chip: {
+    alignSelf: 'center',
+    marginLeft: '5px',
+  },
+  gridWithChips: {
+    display: 'flex',
+  },
 });
 
-const HOCForm = (WrappedComponent, { prefix, route }) => {
+const HOCForm = (WrappedComponent, { prefix, actions, route }) => {
   class HOC extends React.Component {
     constructor(props) {
       super(props);
@@ -46,6 +54,7 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
       this.toggleEditMode = this.toggleEditMode.bind(this);
       this.goBack = this.goBack.bind(this);
       this.sendDataToServer = this.sendDataToServer.bind(this);
+      this.renderChips = this.renderChips.bind(this);
     }
 
     componentDidMount() {
@@ -61,6 +70,17 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
       }
     }
 
+    componentDidUpdate() {
+      const { match } = this.props;
+      this.id = parseId(match.params.id);
+      this.serverRoute = `${window.App.serverPath}${route}/${this.id}`;
+    }
+
+    componentWillUnmount() {
+      const { resetState } = this.props;
+      resetState();
+    }
+
     goBack() {
       const { history, resetState } = this.props;
       history.push(`/${this.route}`);
@@ -69,8 +89,8 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
 
     handleChange(field, e) {
       const { handleChangeInput } = this.props;
-      console.log(field, e.target.value);
-      handleChangeInput(field, e.target.value);
+      const value = e && e.target ? e.target.value : e;
+      handleChangeInput(field, value);
     }
 
     toggleEditMode() {
@@ -79,28 +99,41 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
     }
 
     sendDataToServer(item) {
-      const {
-        // item,
-        toggleLoading,
-        toggleEdit,
-        showErrorModal,
-        history,
-        saveItemFromServer,
-      } = this.props;
+      const { toggleLoading, toggleEdit, showErrorModal, history } = this.props;
 
       toggleLoading(true);
       axios
         .post(this.serverRoute, item)
         .then((res) => {
+          history.push(`/${this.route}/${res.data._id}`);
           toggleLoading(false);
           toggleEdit(false);
-          saveItemFromServer(res.data);
-          history.push(`/${this.route}/${res.data._id}`);
+          this.handleChange('_id', res.data._id);
         })
         .catch((err) => {
           const error = { err };
           showErrorModal(error.err.response.data.message);
         });
+    }
+
+    renderChips(options, selected) {
+      const { classes } = this.props;
+
+      const selectedOptions = options.filter(
+        (option) => selected.indexOf(option._id) !== -1
+      );
+
+      return (
+        <div className={classes.chips}>
+          {selectedOptions.map((option) => (
+            <Chip
+              key={option._id}
+              label={option.name}
+              className={classes.chip}
+            />
+          ))}
+        </div>
+      );
     }
 
     render() {
@@ -111,22 +144,21 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
           goBack={this.goBack}
           sendDataToServer={this.sendDataToServer}
           handleChange={this.handleChange}
+          renderChips={this.renderChips}
         />
       );
     }
   }
 
   HOC.propTypes = {
-    // item: PropTypes.shape({
-    //   name: PropTypes.string.isRequired,
-    //   phoneNumber: PropTypes.string.isRequired,
-    //   mail: PropTypes.string.isRequired,
-    //   _id: PropTypes.string,
-    // }),
     match: PropTypes.shape({
       params: PropTypes.shape({
         id: PropTypes.string,
       }),
+    }),
+    classes: PropTypes.shape({
+      chips: PropTypes.string,
+      chip: PropTypes.string,
     }),
     history: PropTypes.object,
     resetState: PropTypes.func,
@@ -141,10 +173,10 @@ const HOCForm = (WrappedComponent, { prefix, route }) => {
 
   const styledComponent = withStyles(styles)(HOC);
 
-  const actions = new HOCFormActions({ prefix });
+  const useActions = actions || new HOCFormActions({ prefix });
 
   return connect(null, {
-    ...actions,
+    ...useActions,
     showErrorModal: showErrorModalAction,
   })(styledComponent);
 };
