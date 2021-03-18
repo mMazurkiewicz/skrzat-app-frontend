@@ -15,6 +15,7 @@ import { Grid } from '@material-ui/core';
 import Fade from '@material-ui/core/Fade';
 import HOCList from '../abstr/HOCList/HOCList';
 import { prefix } from './teamsReducer';
+import Breadcrumbs from '../abstr/breadcrumbs/Breadcrumbs';
 
 export class TeamsList extends Component {
   render() {
@@ -30,14 +31,8 @@ export class TeamsList extends Component {
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Typography
-          variant="h3"
-          color="textSecondary"
-          gutterBottom
-          align="center"
-        >
-          Ekipy
-        </Typography>
+        <Breadcrumbs routes={[{ name: 'Ekipy' }]} />
+
         <Grid container spacing={3}>
           <Grid item xs={12} align="right">
             <Button

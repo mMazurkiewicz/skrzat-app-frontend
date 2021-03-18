@@ -19,6 +19,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
 import FormActions from './EventsFormActions';
 import { prefix } from './eventsFormReducer';
+import Breadcrumbs from '../../abstr/breadcrumbs/Breadcrumbs';
 
 export class EventsForm extends Component {
   constructor(props) {
@@ -100,11 +101,23 @@ export class EventsForm extends Component {
       fairyTalesOptions,
       addExtraOptions,
       venuesLoading,
+      getBreadCrumbName,
     } = this.props;
 
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
+        <Breadcrumbs
+          routes={[
+            { name: 'Przedstawienia', href: '/events' },
+            {
+              name: getBreadCrumbName(
+                'Nowe przedstawienie',
+                'Edytuj przedstawienie'
+              ),
+            },
+          ]}
+        />
         {loading && (
           <div className={classes.loader}>
             <CircularProgress align="center" />
@@ -313,6 +326,7 @@ EventsForm.propTypes = {
   handleChange: PropTypes.func,
   addExtraOptions: PropTypes.func,
   handleNonItemChange: PropTypes.func,
+  getBreadCrumbName: PropTypes.func,
   venuesLoading: PropTypes.bool.isRequired,
 };
 

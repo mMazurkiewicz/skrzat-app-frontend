@@ -19,6 +19,7 @@ import Select from '@material-ui/core/Select';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import { CirclePicker } from 'react-color';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
+import Breadcrumbs from '../../abstr/breadcrumbs/Breadcrumbs';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -84,10 +85,19 @@ export class TeamsForm extends Component {
       handleChange,
       employeesOptions,
       renderChips,
+      getBreadCrumbName,
     } = this.props;
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
+        <Breadcrumbs
+          routes={[
+            { name: 'Ekipy', href: '/teams' },
+            {
+              name: getBreadCrumbName('Nowa ekipa'),
+            },
+          ]}
+        />
         {loading && (
           <div className={classes.loader}>
             <CircularProgress align="center" />
@@ -277,6 +287,7 @@ TeamsForm.propTypes = {
   employeesOptions: PropTypes.array,
   saveEmployeesOptions: PropTypes.func.isRequired,
   renderChips: PropTypes.func.isRequired,
+  getBreadCrumbName: PropTypes.func.isRequired,
 };
 
 export const prefix = 'TEAMS_FORM_';

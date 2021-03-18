@@ -11,6 +11,7 @@ import UndoIcon from '@material-ui/icons/Undo';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
+import Breadcrumbs from '../../abstr/breadcrumbs/Breadcrumbs';
 
 export class FairyTalesForm extends Component {
   render() {
@@ -23,10 +24,19 @@ export class FairyTalesForm extends Component {
       goBack,
       handleChange,
       sendDataToServer,
+      getBreadCrumbName,
     } = this.props;
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
+        <Breadcrumbs
+          routes={[
+            { name: 'Bajki', href: '/fairyTales' },
+            {
+              name: getBreadCrumbName('Nowa bajka'),
+            },
+          ]}
+        />
         {loading && (
           <div className={classes.loader}>
             <CircularProgress align="center" />
@@ -138,6 +148,7 @@ FairyTalesForm.propTypes = {
   goBack: PropTypes.func,
   sendDataToServer: PropTypes.func,
   handleChange: PropTypes.func,
+  getBreadCrumbName: PropTypes.func.isRequired,
 };
 
 export const prefix = 'FAIRYTALES_FORM_';
