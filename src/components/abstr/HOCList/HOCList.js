@@ -60,6 +60,9 @@ const styles = (theme) => ({
     flexDirection: 'column',
     justifyContent: 'center',
   },
+  alignPagination: {
+    justifyContent: 'flex-end',
+  },
 });
 
 const HOCList = (WrappedComponent, { prefix, serverRoute, route }) => {
@@ -80,13 +83,36 @@ const HOCList = (WrappedComponent, { prefix, serverRoute, route }) => {
       this.loadData();
     }
 
+    componentDidUpdate(prevProps) {
+      const { itemsPerPage, totalItems, setTotalPages, page } = this.props;
+
+      if (
+        itemsPerPage !== prevProps.itemsPerPage ||
+        totalItems !== prevProps.totalItems
+      ) {
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        setTotalPages(totalPages);
+      }
+
+      if (page !== prevProps.page) {
+        this.loadData();
+      }
+    }
+
     loadData() {
-      const { toggleLoading, saveItemsFromServer, showErrorModal } = this.props;
+      const {
+        toggleLoading,
+        saveItemsFromServer,
+        showErrorModal,
+        page,
+        itemsPerPage,
+      } = this.props;
       toggleLoading(true);
       axios
-        .get(this.serverRoute)
+        .get(this.serverRoute, { params: { page, itemsPerPage } })
         .then((res) => {
-          saveItemsFromServer(res.data);
+          const data = res.data[0];
+          saveItemsFromServer({ ...data });
           toggleLoading(false);
         })
         .catch((err) => {
@@ -158,11 +184,16 @@ const HOCList = (WrappedComponent, { prefix, serverRoute, route }) => {
       content: PropTypes.string,
       toolbar: PropTypes.string,
       td: PropTypes.string,
+      alignPagination: PropTypes.string,
     }),
     toggleLoading: PropTypes.func.isRequired,
     saveItemsFromServer: PropTypes.func.isRequired,
     showErrorModal: PropTypes.func.isRequired,
     setAnchorEl: PropTypes.func.isRequired,
+    itemsPerPage: PropTypes.number.isRequired,
+    totalItems: PropTypes.number.isRequired,
+    setTotalPages: PropTypes.func.isRequired,
+    page: PropTypes.number.isRequired,
   };
 
   const styledComponent = withStyles(styles)(HOC);
