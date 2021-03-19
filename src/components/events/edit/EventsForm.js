@@ -16,6 +16,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { pl } from 'date-fns/locale';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import ListItemText from '@material-ui/core/ListItemText';
+import Alert from '@material-ui/lab/Alert';
 import HOCForm from '../../abstr/HOCForm/HOCForm';
 import FormActions from './EventsFormActions';
 import { prefix } from './eventsFormReducer';
@@ -33,6 +34,7 @@ export class EventsForm extends Component {
     this.getVenueSearchValue = this.getVenueSearchValue.bind(this);
     this.loadVenuesDebounced = AwesomeDebouncePromise(this.loadVenues, 500);
     this.findTeamColor = this.findTeamColor.bind(this);
+    this.isPast = this.isPast.bind(this);
   }
 
   componentDidMount() {
@@ -44,6 +46,11 @@ export class EventsForm extends Component {
     const { item } = this.props;
     const venue = item.venue ? item.venue.name : null;
     return inputValue.match(venue) ? venue : inputValue;
+  }
+
+  isPast() {
+    const { item } = this.props;
+    return Date.parse(item.dateTime) < Date.now();
   }
 
   loadVenues(inputValue) {
@@ -125,6 +132,14 @@ export class EventsForm extends Component {
         )}
         {!loading && (
           <Grid container spacing={4} alignItems="flex-end">
+            {this.isPast() && (
+              <Grid item xs={12} align="center">
+                <Alert severity="warning">
+                  Wydarzenie już się odbyło! Brak możliwośći edycji!
+                </Alert>
+              </Grid>
+            )}
+
             <Grid item xs={12} md={6}>
               <MuiPickersUtilsProvider locale={pl} utils={DateFnsUtils}>
                 <DateTimePicker
@@ -133,7 +148,7 @@ export class EventsForm extends Component {
                   id="dateTime"
                   disabled={!editMode}
                   label="Data"
-                  disablePast
+                  disablePast={!(this.isPast() && item._id)}
                   ampm={false}
                   inputVariant="outlined"
                   value={item.dateTime}
@@ -150,7 +165,7 @@ export class EventsForm extends Component {
                 noOptionsText="Brak wyników"
                 clearText="Wyczyść"
                 id="venue picker"
-                disabled={!editMode}
+                disabled={!editMode || !!(!this.isPast() && item._id)}
                 filterOptions={(x) => x}
                 value={item.venue}
                 options={venuesOptions.sort((a, b) =>
@@ -280,6 +295,7 @@ export class EventsForm extends Component {
                     size="large"
                     color="primary"
                     startIcon={<EditIcon />}
+                    disabled={this.isPast()}
                   >
                     Edytuj
                   </Button>
