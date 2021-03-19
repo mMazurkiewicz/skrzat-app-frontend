@@ -12,6 +12,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Grid } from '@material-ui/core';
 import Fade from '@material-ui/core/Fade';
+import Pagination from '@material-ui/lab/Pagination';
 import HOCList from '../abstr/HOCList/HOCList';
 import { prefix } from './fairyTalesListReducer';
 import Breadcrumbs from '../abstr/breadcrumbs/Breadcrumbs';
@@ -26,13 +27,27 @@ export class FairyTalesList extends Component {
       openItemMenu,
       closeItemMenu,
       goToEdit,
+      setPage,
+      page,
+      totalPages,
     } = this.props;
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Breadcrumbs routes={[{ name: 'Bajki' }]} />
 
-        <Grid container spacing={3}>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <Pagination
+              count={totalPages}
+              classes={{
+                ul: classes.alignPagination,
+              }}
+              page={page}
+              onChange={(e, p) => setPage(p)}
+            />
+          </Grid>
+
           <Grid item xs={12} align="right">
             <Button
               variant="outlined"
@@ -126,18 +141,26 @@ FairyTalesList.propTypes = {
     toolbar: PropTypes.string,
     paper: PropTypes.string,
     showOnHover: PropTypes.string,
+    alignPagination: PropTypes.string,
   }),
   anchorEl: PropTypes.arrayOf(PropTypes.object),
   handleDeleteItem: PropTypes.func,
   openItemMenu: PropTypes.func.isRequired,
   closeItemMenu: PropTypes.func.isRequired,
   goToEdit: PropTypes.func.isRequired,
+  setPage: PropTypes.func,
+  page: PropTypes.number,
+  totalPages: PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
   loading: state.fairyTales.list.loading,
   items: state.fairyTales.list.items,
   anchorEl: state.fairyTales.list.anchorEl,
+  page: state.fairyTales.list.page,
+  itemsPerPage: state.fairyTales.list.itemsPerPage,
+  totalItems: state.fairyTales.list.totalItems,
+  totalPages: state.fairyTales.list.totalPages,
 });
 
 const wrappedList = HOCList(FairyTalesList, {

@@ -16,6 +16,7 @@ import Fade from '@material-ui/core/Fade';
 import RoomIcon from '@material-ui/icons/Room';
 import LanguageIcon from '@material-ui/icons/Language';
 import CallIcon from '@material-ui/icons/Call';
+import Pagination from '@material-ui/lab/Pagination';
 import { prefix } from './venuesListReducer';
 import EventsEditActions from '../events/edit/EventsFormActions';
 import {
@@ -29,7 +30,9 @@ import Breadcrumbs from '../abstr/breadcrumbs/Breadcrumbs';
 export class VenuesList extends Component {
   constructor(props) {
     super(props);
-    this.handleCreateNewEventForVenue = this.handleCreateNewEventForVenue.bind();
+    this.handleCreateNewEventForVenue = this.handleCreateNewEventForVenue.bind(
+      this
+    );
   }
 
   getDateDiffTooltipText(date) {
@@ -67,6 +70,9 @@ export class VenuesList extends Component {
       openItemMenu,
       closeItemMenu,
       goToEdit,
+      setPage,
+      page,
+      totalPages,
     } = this.props;
 
     return (
@@ -74,7 +80,18 @@ export class VenuesList extends Component {
         <div className={classes.toolbar} />
         <Breadcrumbs routes={[{ name: 'Placówki' }]} />
 
-        <Grid container spacing={3}>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <Pagination
+              count={totalPages}
+              classes={{
+                ul: classes.alignPagination,
+              }}
+              page={page}
+              onChange={(e, p) => setPage(p)}
+            />
+          </Grid>
+
           <Grid item xs={12} align="right">
             <Button
               variant="outlined"
@@ -99,7 +116,7 @@ export class VenuesList extends Component {
                 onClick={(e) => goToEdit(e, item._id)}
                 className={classes.paper}
               >
-                <Grid container spacing={2} key={item._id}>
+                <Grid container spacing={1} key={item._id}>
                   <Grid item xs={11} align="justify">
                     <Typography variant="subtitle1" color="textSecondary">
                       {item.name}
@@ -259,6 +276,7 @@ VenuesList.propTypes = {
     paper: PropTypes.string,
     addButton: PropTypes.string,
     verticalCenterInGrid: PropTypes.string,
+    alignPagination: PropTypes.string,
   }),
   setVenueForNewEvent: PropTypes.func,
   anchorEl: PropTypes.arrayOf(PropTypes.object),
@@ -266,12 +284,19 @@ VenuesList.propTypes = {
   openItemMenu: PropTypes.func,
   closeItemMenu: PropTypes.func,
   goToEdit: PropTypes.func,
+  setPage: PropTypes.func,
+  page: PropTypes.number,
+  totalPages: PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
   loading: state.venues.list.loading,
   items: state.venues.list.items,
   anchorEl: state.venues.list.anchorEl,
+  page: state.venues.list.page,
+  itemsPerPage: state.venues.list.itemsPerPage,
+  totalItems: state.venues.list.totalItems,
+  totalPages: state.venues.list.totalPages,
 });
 
 const mapActionsToProps = {
