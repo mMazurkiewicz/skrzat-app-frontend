@@ -13,6 +13,7 @@ import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 import { Grid } from '@material-ui/core';
 import Fade from '@material-ui/core/Fade';
+import Pagination from '@material-ui/lab/Pagination';
 import HOCList from '../abstr/HOCList/HOCList';
 import { prefix } from './teamsReducer';
 import Breadcrumbs from '../abstr/breadcrumbs/Breadcrumbs';
@@ -27,6 +28,9 @@ export class TeamsList extends Component {
       handleDeleteItem,
       openItemMenu,
       closeItemMenu,
+      setPage,
+      page,
+      totalPages,
     } = this.props;
     return (
       <main className={classes.content}>
@@ -34,6 +38,17 @@ export class TeamsList extends Component {
         <Breadcrumbs routes={[{ name: 'Ekipy' }]} />
 
         <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Pagination
+              count={totalPages}
+              classes={{
+                ul: classes.alignPagination,
+              }}
+              page={page}
+              onChange={(e, p) => setPage(p)}
+            />
+          </Grid>
+
           <Grid item xs={12} align="right">
             <Button
               variant="outlined"
@@ -61,7 +76,7 @@ export class TeamsList extends Component {
                 onClick={(e) => goToEdit(e, item._id)}
                 className={classes.paper}
               >
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={11}>
                     <Typography variant="subtitle1" color="textSecondary">
                       {item.name}
@@ -136,18 +151,26 @@ TeamsList.propTypes = {
     paper: PropTypes.string,
     chips: PropTypes.string,
     showOnHover: PropTypes.string,
+    alignPagination: PropTypes.string,
   }),
   handleDeleteItem: PropTypes.func.isRequired,
   openItemMenu: PropTypes.func.isRequired,
   closeItemMenu: PropTypes.func.isRequired,
   goToEdit: PropTypes.func.isRequired,
   anchorEl: PropTypes.arrayOf(PropTypes.object),
+  setPage: PropTypes.func,
+  page: PropTypes.number,
+  totalPages: PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
   loading: state.teams.list.loading,
   items: state.teams.list.items,
   anchorEl: state.teams.list.anchorEl,
+  page: state.teams.list.page,
+  itemsPerPage: state.teams.list.itemsPerPage,
+  totalItems: state.teams.list.totalItems,
+  totalPages: state.teams.list.totalPages,
 });
 
 const wrappedList = HOCList(TeamsList, {

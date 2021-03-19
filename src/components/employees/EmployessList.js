@@ -13,6 +13,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Grid } from '@material-ui/core';
 import Fade from '@material-ui/core/Fade';
+import Pagination from '@material-ui/lab/Pagination';
 import { prefix } from './employeesListReducer';
 import HOCList from '../abstr/HOCList/HOCList';
 import Breadcrumbs from '../abstr/breadcrumbs/Breadcrumbs';
@@ -27,13 +28,27 @@ export class EmployeesList extends Component {
       openItemMenu,
       closeItemMenu,
       goToEdit,
+      setPage,
+      page,
+      totalPages,
     } = this.props;
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Breadcrumbs routes={[{ name: 'Pracownicy' }]} />
 
-        <Grid container spacing={3}>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <Pagination
+              count={totalPages}
+              classes={{
+                ul: classes.alignPagination,
+              }}
+              page={page}
+              onChange={(e, p) => setPage(p)}
+            />
+          </Grid>
+
           <Grid item xs={12} align="right">
             <Button
               variant="outlined"
@@ -58,7 +73,7 @@ export class EmployeesList extends Component {
                 onClick={(e) => goToEdit(e, item._id)}
                 className={classes.paper}
               >
-                <Grid container key={item._id} spacing={2}>
+                <Grid container key={item._id} spacing={1}>
                   <Grid item xs={11} key={item._id}>
                     <Typography variant="subtitle1" color="textSecondary">
                       {item.name}
@@ -156,18 +171,26 @@ EmployeesList.propTypes = {
     chips: PropTypes.string,
     paper: PropTypes.string,
     showOnHover: PropTypes.string,
+    alignPagination: PropTypes.string,
   }),
   anchorEl: PropTypes.arrayOf(PropTypes.object),
   handleDeleteItem: PropTypes.func,
   openItemMenu: PropTypes.func.isRequired,
   closeItemMenu: PropTypes.func.isRequired,
   goToEdit: PropTypes.func.isRequired,
+  setPage: PropTypes.func,
+  page: PropTypes.number,
+  totalPages: PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
   loading: state.employees.list.loading,
   items: state.employees.list.items,
   anchorEl: state.employees.list.anchorEl,
+  page: state.employees.list.page,
+  itemsPerPage: state.employees.list.itemsPerPage,
+  totalItems: state.employees.list.totalItems,
+  totalPages: state.employees.list.totalPages,
 });
 
 const wrappedList = HOCList(EmployeesList, {

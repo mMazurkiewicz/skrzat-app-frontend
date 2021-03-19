@@ -14,6 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { Grid } from '@material-ui/core';
 import Fade from '@material-ui/core/Fade';
 import RoomIcon from '@material-ui/icons/Room';
+import Pagination from '@material-ui/lab/Pagination';
 import HOCList from '../abstr/HOCList/HOCList';
 import { parseDateTime } from '../../helpers/dateHelpers';
 import { prefix } from './eventsListReducer';
@@ -40,13 +41,26 @@ export class EventsList extends Component {
       openItemMenu,
       closeItemMenu,
       goToEdit,
+      setPage,
+      page,
+      totalPages,
     } = this.props;
     return (
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Breadcrumbs routes={[{ name: 'Przedstawienia' }]} />
 
-        <Grid container spacing={3}>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <Pagination
+              count={totalPages}
+              classes={{
+                ul: classes.alignPagination,
+              }}
+              page={page}
+              onChange={(e, p) => setPage(p)}
+            />
+          </Grid>
           <Grid item xs={12} align="right">
             <Button
               variant="outlined"
@@ -74,7 +88,7 @@ export class EventsList extends Component {
                   borderLeft: `5px solid ${item.team.color}`,
                 }}
               >
-                <Grid container spacing={2}>
+                <Grid container spacing={1}>
                   <Grid item xs={11} align="justify">
                     <Typography variant="subtitle1" color="textSecondary">
                       {item.venue.name}
@@ -198,18 +212,26 @@ EventsList.propTypes = {
     paper: PropTypes.string,
     showOnHover: PropTypes.string,
     verticalCenterInGrid: PropTypes.string,
+    alignPagination: PropTypes.string,
   }),
   anchorEl: PropTypes.arrayOf(PropTypes.object),
   handleDeleteItem: PropTypes.func,
   openItemMenu: PropTypes.func.isRequired,
   closeItemMenu: PropTypes.func.isRequired,
   goToEdit: PropTypes.func.isRequired,
+  setPage: PropTypes.func,
+  page: PropTypes.number,
+  totalPages: PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
   loading: state.events.list.loading,
   items: state.events.list.items,
   anchorEl: state.events.list.anchorEl,
+  page: state.events.list.page,
+  itemsPerPage: state.events.list.itemsPerPage,
+  totalItems: state.events.list.totalItems,
+  totalPages: state.events.list.totalPages,
 });
 
 const wrappedList = HOCList(EventsList, {
