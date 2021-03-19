@@ -19,6 +19,7 @@ const token = localStorage.skrzatAppJWTToken;
 if (token) {
   setAuthToken(token);
   const decodedUserFromToken = jwtDecode(token);
+  decodedUserFromToken.token = token;
   store.dispatch(saveUserData(decodedUserFromToken));
 
   const currentTime = Date.now() / 1000;
