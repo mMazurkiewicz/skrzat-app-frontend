@@ -132,7 +132,7 @@ export class EventsForm extends Component {
         )}
         {!loading && (
           <Grid container spacing={4} alignItems="flex-end">
-            {this.isPast() && (
+            {this.isPast() && item._id && (
               <Grid item xs={12} align="center">
                 <Alert severity="warning">
                   Wydarzenie już się odbyło! Brak możliwośći edycji!
