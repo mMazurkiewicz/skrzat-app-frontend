@@ -35,7 +35,7 @@ const MenuProps = {
 export class TeamsForm extends Component {
   constructor(props) {
     super(props);
-    this.employeesRoute = `${window.App.serverPath}employees`;
+    this.employeesRoute = `${window.App.serverPath}employees/dictionary`;
     this.loadEmployees = this.loadEmployees.bind(this);
     this.prepareDataAndSave = this.prepareDataAndSave.bind(this);
     this.checkForMembers = this.checkForMembers.bind(this);
@@ -62,18 +62,6 @@ export class TeamsForm extends Component {
     });
   }
 
-  prepareDataAndSave() {
-    const { item, sendDataToServer, employeesOptions } = this.props;
-
-    const preparedEmployees = employeesOptions
-      // eslint-disable-next-line react/prop-types
-      .filter(this.checkForMembers)
-      .map((employee) => ({ name: employee.name, _id: employee._id }));
-
-    item.members = preparedEmployees;
-    sendDataToServer(item);
-  }
-
   render() {
     const {
       classes,
@@ -86,6 +74,7 @@ export class TeamsForm extends Component {
       employeesOptions,
       renderChips,
       getBreadCrumbName,
+      sendDataToServer,
     } = this.props;
     return (
       <main className={classes.content}>
@@ -230,7 +219,7 @@ export class TeamsForm extends Component {
                 )}
                 {editMode ? (
                   <Button
-                    onClick={() => this.prepareDataAndSave()}
+                    onClick={() => sendDataToServer(item)}
                     size="large"
                     variant="contained"
                     color="primary"
